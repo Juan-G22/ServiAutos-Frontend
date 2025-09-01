@@ -1,0 +1,69 @@
+<div class="p-6">
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">📊 Dashboard</h1>
+  <p class="text-gray-600 mb-8">Bienvenido al sistema de gestión <span class="font-semibold">TodoTech</span></p>
+
+  <!-- Tarjetas de resumen -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white shadow rounded-2xl p-6 flex items-center justify-between hover:shadow-lg transition">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-700">Productos</h2>
+        <p class="text-2xl font-bold text-indigo-600">128</p>
+      </div>
+      <div class="text-indigo-600 text-3xl">📦</div>
+    </div>
+
+    <div class="bg-white shadow rounded-2xl p-6 flex items-center justify-between hover:shadow-lg transition">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-700">Pedidos</h2>
+        <p class="text-2xl font-bold text-green-600">54</p>
+      </div>
+      <div class="text-green-600 text-3xl">🛒</div>
+    </div>
+
+    <div class="bg-white shadow rounded-2xl p-6 flex items-center justify-between hover:shadow-lg transition">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-700">Clientes</h2>
+        <p class="text-2xl font-bold text-pink-600">76</p>
+      </div>
+      <div class="text-pink-600 text-3xl">👤</div>
+    </div>
+  </div>
+
+  <!-- Tabla de últimos pedidos -->
+  <div class="bg-white shadow rounded-2xl p-6">
+    <h2 class="text-xl font-semibold mb-4 text-gray-700">📋 Últimos Pedidos</h2>
+    <table class="w-full border-collapse">
+      <thead>
+        <tr class="bg-gray-100 text-gray-600">
+          <th class="border p-3 text-left">#</th>
+          <th class="border p-3 text-left">Cliente</th>
+          <th class="border p-3 text-left">Total</th>
+          <th class="border p-3 text-left">Fecha</th>
+          <th class="border p-3 text-left">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of [ 
+          {id: 101, cliente: 'Juan Pérez', total: '$250.000', fecha: '2025-08-30', estado: 'Completado'},
+          {id: 102, cliente: 'Ana Gómez', total: '$120.000', fecha: '2025-08-29', estado: 'Pendiente'},
+          {id: 103, cliente: 'Carlos Ruiz', total: '$90.000', fecha: '2025-08-28', estado: 'Cancelado'}
+        ]" class="hover:bg-gray-50 transition">
+          <td class="border p-3">{{ pedido.id }}</td>
+          <td class="border p-3">{{ pedido.cliente }}</td>
+          <td class="border p-3 font-semibold">{{ pedido.total }}</td>
+          <td class="border p-3">{{ pedido.fecha }}</td>
+          <td class="border p-3">
+            <span 
+              [ngClass]="{
+                'bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm': pedido.estado === 'Completado',
+                'bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm': pedido.estado === 'Pendiente',
+                'bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm': pedido.estado === 'Cancelado'
+              }">
+              {{ pedido.estado }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">🚗 Vehículos</h1>
+    <button 
+      class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+      (click)="router.navigate(['/vehiculos/crear'])">
+      + Crear Vehículo
+    </button>
+  </div>
+
+  <!-- Buscador -->
+  <input
+    [(ngModel)]="search"
+    type="text"
+    placeholder="Buscar por placa, marca o modelo..."
+    class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-indigo-500"
+  />
+
+  <!-- Tabla de vehículos -->
+  <table class="w-full border-collapse bg-white shadow rounded-xl overflow-hidden">
+    <thead class="bg-gray-100 text-gray-600">
+      <tr>
+        <th class="p-3 text-left">Placa</th>
+        <th class="p-3 text-left">Marca</th>
+        <th class="p-3 text-left">Modelo</th>
+        <th class="p-3 text-left">Cliente</th>
+        <th class="p-3 text-left">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let vehiculo of vehiculosFiltrados" class="hover:bg-gray-50 transition">
+        <td class="p-3 font-semibold">{{ vehiculo.licencePlate }}</td>
+        <td class="p-3">{{ vehiculo.brand }}</td>
+        <td class="p-3">{{ vehiculo.model }}</td>
+        <td class="p-3">{{ vehiculo.clientId }}</td>
+        <td class="p-3 flex gap-2">
+          <button (click)="editarVehiculo(vehiculo.id)" class="text-blue-600 hover:underline">Editar</button>
+          <button (click)="eliminarVehiculo(vehiculo.id)" class="text-red-600 hover:underline">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

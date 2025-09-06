@@ -1,0 +1,48 @@
+<div class="p-6 max-w-lg mx-auto bg-white shadow rounded-xl">
+  <h1 class="text-2xl font-bold mb-6 text-gray-800">Crear Orden</h1>
+
+  <form (ngSubmit)="guardarOrden()">
+    <!-- Cliente -->
+    <label class="block mb-2 font-semibold">Cliente</label>
+    <select [(ngModel)]="orden.clientId" name="clientId" class="w-full border p-2 rounded mb-4" required>
+      <option value="" disabled selected>Selecciona un cliente</option>
+      <option *ngFor="let cliente of clientes" [value]="cliente.id">
+        {{ cliente.name }} {{ cliente.lastName }}
+      </option>
+    </select>
+
+    <!-- Vehículo -->
+    <label class="block mb-2 font-semibold">Vehículo</label>
+    <select [(ngModel)]="orden.vehicleId" name="vehicleId" class="w-full border p-2 rounded mb-4" required>
+      <option value="" disabled selected>Selecciona un vehículo</option>
+      <option *ngFor="let vehiculo of vehiculos" [value]="vehiculo.id">
+        {{ vehiculo.licencePlate }} - {{ vehiculo.brand }}
+      </option>
+    </select>
+
+    <!-- Diagnóstico -->
+    <label class="block mb-2 font-semibold">Diagnóstico</label>
+    <textarea [(ngModel)]="orden.diagnostic" name="diagnostic" class="w-full border p-2 rounded mb-4" required></textarea>
+
+    <!-- Técnico asignado -->
+    <label class="block mb-2 font-semibold">Técnico Asignado</label>
+    <input [(ngModel)]="orden.assignedTechnician" name="assignedTechnician" type="text" class="w-full border p-2 rounded mb-4" required />
+
+    <!-- Valor de mano de obra -->
+    <label class="block mb-2 font-semibold">Valor Mano de Obra</label>
+    <input [(ngModel)]="orden.laborValue" name="laborValue" type="number" min="0" class="w-full border p-2 rounded mb-4" required />
+
+    <!-- Estado -->
+    <label class="block mb-2 font-semibold">Estado</label>
+    <select [(ngModel)]="orden.status" name="status" class="w-full border p-2 rounded mb-4" required>
+      <option value="Pendiente">Pendiente</option>
+      <option value="En progreso">En progreso</option>
+      <option value="Finalizada">Finalizada</option>
+    </select>
+
+    <!-- Botón -->
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+      Guardar Orden
+    </button>
+  </form>
+</div>

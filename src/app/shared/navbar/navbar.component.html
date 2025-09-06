@@ -1,10 +1,29 @@
-<nav class="bg-gray-800 text-white p-4 flex justify-between items-center">
-  <div class="font-bold text-xl">TodoTech</div>
-  <div class="space-x-4">
-    <a routerLink="/" routerLinkActive="underline">Dashboard</a>
-    <a routerLink="/productos" routerLinkActive="underline">Productos</a>
-    <a routerLink="/pedidos" routerLinkActive="underline">Pedidos</a>
-    <a routerLink="/clientes" routerLinkActive="underline">Clientes</a>
+<nav class="bg-gray-900 text-white px-6 py-3 flex items-center justify-between shadow-md">
+  <!-- Logo -->
+  <div class="flex items-center space-x-3">
+    <img src="assets/img/logo.png" alt="Logo" class="h-8 w-auto">
+    <span class="font-bold text-lg">ServiAutos</span>
+  </div>
+
+  <!-- Links principales -->
+  <div class="flex space-x-6">
+    <a routerLink="/dashboard" routerLinkActive="text-blue-400" class="hover:text-blue-400">Dashboard</a>
+    <a routerLink="/clientes" routerLinkActive="text-blue-400" class="hover:text-blue-400">Clientes</a>
+    <a routerLink="/vehiculos" routerLinkActive="text-blue-400" class="hover:text-blue-400">Vehículos</a>
+    <a routerLink="/ordenes" routerLinkActive="text-blue-400" class="hover:text-blue-400">Órdenes</a>
+    <a routerLink="/inventario" routerLinkActive="text-blue-400" class="hover:text-blue-400">Inventario</a>
+  </div>
+
+  <!-- Usuario -->
+  <div class="flex items-center space-x-4">
+    
+    <span class="text-sm">Hola, {{ userName || 'Usuario' }}</span>
+
+    <button 
+      (click)="logout()" 
+      class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
+      Cerrar sesión
+    </button>
   </div>
 </nav>
 

@@ -1,0 +1,44 @@
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">Lista de Clientes</h2>
+
+  <div *ngIf="errorMessage" class="text-red-600">{{ errorMessage }}</div>
+
+  <table class="table-auto w-full border border-gray-300">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="px-4 py-2 border">Nombre</th>
+        <th class="px-4 py-2 border">Apellido</th>
+        <th class="px-4 py-2 border">Documento</th>
+        <th class="px-4 py-2 border">Correo</th>
+        <th class="px-4 py-2 border">Dirección</th>
+        <th class="px-4 py-2 border">Teléfono</th>
+        <th class="px-4 py-2 border text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cliente of clientes" class="hover:bg-gray-100">
+        <td class="px-4 py-2 border">{{ cliente.name }}</td>
+        <td class="px-4 py-2 border">{{ cliente.lastName }}</td>
+        <td class="px-4 py-2 border">{{ cliente.document }}</td>
+        <td class="px-4 py-2 border">{{ cliente.email }}</td>
+        <td class="px-4 py-2 border">{{ cliente.address }}</td>
+        <td class="px-4 py-2 border">{{ cliente.phone }}</td>
+        <td class="px-4 py-2 border text-center">
+          <button (click)="editarCliente(cliente.id || cliente._id)" 
+            class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded mr-2">
+            Editar
+            </button>
+        <button (click)="eliminarCliente(cliente.id || cliente._id)" 
+                class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">
+        Eliminar
+        </button>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+

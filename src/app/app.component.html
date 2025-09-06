@@ -1,6 +1,5 @@
-<app-navbar></app-navbar>
+<ng-container *ngIf="!esRutaSinNavbar()">
+  <app-navbar></app-navbar>
+</ng-container>
 
-<!-- Contenedor principal -->
-<div class="p-6">
-  <router-outlet></router-outlet>
-</div>
+<router-outlet></router-outlet>

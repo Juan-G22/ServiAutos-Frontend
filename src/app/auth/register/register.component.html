@@ -1,0 +1,91 @@
+<div class="relative min-h-screen flex items-center justify-center bg-gray-900">
+  <!-- Imagen de fondo -->
+  <div class="absolute inset-0">
+    <img src="assets/img/carros.png" alt="Carros" class="w-full h-full object-cover">
+    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+  </div>
+
+  <!-- Contenedor del formulario -->
+  <div class="relative bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+    <h2 class="text-2xl font-bold text-center mb-6">Crear Cuenta</h2>
+
+    <!-- Mensajes -->
+    <div *ngIf="errorMessage" class="mb-4 text-red-500 text-center">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="mb-4 text-green-500 text-center">
+      {{ successMessage }}
+    </div>
+
+    <!-- Formulario de registro -->
+    <form (ngSubmit)="requestSignup()" *ngIf="!codeSent">
+      <div class="mb-3">
+        <label class="block text-gray-700">Nombre</label>
+        <input type="text" [(ngModel)]="name" name="name"
+               class="w-full px-3 py-2 border rounded" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-gray-700">Apellido</label>
+        <input type="text" [(ngModel)]="lastName" name="lastName"
+               class="w-full px-3 py-2 border rounded" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-gray-700">Teléfono</label>
+        <input type="text" [(ngModel)]="phone" name="phone"
+               class="w-full px-3 py-2 border rounded" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-gray-700">Dirección</label>
+        <input type="text" [(ngModel)]="address" name="address"
+               class="w-full px-3 py-2 border rounded" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-gray-700">Correo</label>
+        <input type="email" [(ngModel)]="email" name="email"
+               class="w-full px-3 py-2 border rounded" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-gray-700">Contraseña</label>
+        <input type="password" [(ngModel)]="password" name="password"
+               class="w-full px-3 py-2 border rounded" required />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-gray-700">Confirmar contraseña</label>
+        <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword"
+               class="w-full px-3 py-2 border rounded" required />
+      </div>
+
+      <button type="submit"
+              class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        Solicitar Registro
+      </button>
+    </form>
+
+    <!-- Verificación de código -->
+    <form (ngSubmit)="verifySignup()" *ngIf="codeSent">
+      <div class="mb-4">
+        <label class="block text-gray-700">Código de verificación</label>
+        <input type="text" [(ngModel)]="verificationCode" name="verificationCode"
+               class="w-full px-3 py-2 border rounded" required />
+      </div>
+
+      <button type="submit"
+              class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+        Verificar y Crear Usuario
+      </button>
+    </form>
+
+     <div class="text-center mt-4">
+      <button (click)="volverAlLogin()" class="text-blue-600 hover:underline">
+        ¿Ya tienes cuenta? Inicia sesión
+      </button>
+    </div>
+  </div>
+</div>
+

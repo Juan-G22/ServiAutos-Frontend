@@ -1,0 +1,41 @@
+<div class="p-6 max-w-lg mx-auto bg-white shadow rounded-xl">
+  <h1 class="text-2xl font-bold mb-6 text-gray-800">Crear Vehículo</h1>
+
+  <!-- Mensajes -->
+  <div *ngIf="successMessage" class="text-green-600 mb-4">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="text-red-600 mb-4">{{ errorMessage }}</div>
+
+  <form (ngSubmit)="guardarVehiculo()">
+    <!-- Placa -->
+    <label class="block mb-2 font-semibold">Placa</label>
+    <input [(ngModel)]="vehiculo.licencePlate" name="licencePlate" type="text"
+      class="w-full border p-2 rounded mb-4" required />
+
+    <!-- Marca -->
+    <label class="block mb-2 font-semibold">Marca</label>
+    <input [(ngModel)]="vehiculo.brand" name="brand" type="text"
+      class="w-full border p-2 rounded mb-4" required />
+
+    <!-- Modelo -->
+    <label class="block mb-2 font-semibold">Modelo</label>
+    <input [(ngModel)]="vehiculo.model" name="model" type="text"
+      class="w-full border p-2 rounded mb-4" required />
+
+    <!-- Cliente -->
+    <label class="block mb-2 font-semibold">Cliente</label>
+    <select [(ngModel)]="vehiculo.clientId" name="clientId"
+      class="w-full border p-2 rounded mb-4" required>
+      <option value="" disabled selected>Selecciona un cliente</option>
+      <option *ngFor="let cliente of clientes" [value]="cliente.id">
+        {{ cliente.name }} {{ cliente.lastName }} ({{ cliente.document }})
+      </option>
+    </select>
+
+    <!-- Botón -->
+    <button type="submit"
+      class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+      Guardar Vehículo
+    </button>
+  </form>
+</div>
+

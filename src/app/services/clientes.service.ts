@@ -1,35 +1,39 @@
+// src/app/services/clientes.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-
-export interface Cliente {
-  id: number;
-  nombre: string;
-  correo: string;
-}
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientesService {
 
-  private clientes: Cliente[] = [
-    { id: 1, nombre: 'Juan Pérez', correo: 'juan@example.com' },
-    { id: 2, nombre: 'María López', correo: 'maria@example.com' }
-  ];
+  private apiUrl = 'http://localhost:8080/api/clients';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  listar(): Observable<Cliente[]> {
-    return of(this.clientes);
+  // Crear cliente
+  createClient(cliente: any): Observable<any> {
+    return this.http.post(this.apiUrl, cliente);
   }
 
-  crear(cliente: Cliente): Observable<Cliente> {
-    cliente.id = this.clientes.length + 1;
-    this.clientes.push(cliente);
-    return of(cliente);
+  // Obtener todos
+  getClients(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
 
-  buscarPorId(id: number): Observable<Cliente | undefined> {
-    return of(this.clientes.find(c => c.id === id));
+  // Obtener por id
+  getClientById(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+  // Actualizar
+  updateClient(id: string, cliente: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, cliente);
+  }
+
+  // Eliminar
+  deleteClient(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

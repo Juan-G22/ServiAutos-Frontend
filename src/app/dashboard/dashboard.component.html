@@ -1,0 +1,54 @@
+<div class="relative min-h-screen bg-gray-900 text-white">
+  <!-- Contenedor principal en 3 columnas -->
+  <div class="grid grid-cols-1 md:grid-cols-3 h-screen">
+    
+    <!-- Crear Clientes -->
+    <div 
+      class="relative group overflow-hidden cursor-pointer"
+      (click)="goTo('/clientes/crear')">
+      
+      <img src="assets/img/clientes.jpg" 
+           alt="Clientes" 
+           class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110 group-hover:brightness-110" />
+
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center transition duration-500 group-hover:bg-opacity-30">
+        <h2 class="text-3xl font-bold mb-2">Crear Clientes</h2>
+        <p class="text-lg">Registra nuevos clientes en el sistema.</p>
+      </div>
+    </div>
+
+    <!-- Registrar Vehículos -->
+    <div 
+      class="relative group overflow-hidden cursor-pointer"
+      (click)="goTo('/vehiculos/crear')">
+      
+      <img src="assets/img/vehiculos.jpg" 
+           alt="Vehículos" 
+           class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110 group-hover:brightness-110" />
+
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center transition duration-500 group-hover:bg-opacity-30">
+        <h2 class="text-3xl font-bold mb-2">Registrar Vehículos</h2>
+        <p class="text-lg">Agrega vehículos a los clientes.</p>
+      </div>
+    </div>
+
+    <!-- Órdenes de Servicio -->
+    <div 
+      class="relative group overflow-hidden cursor-pointer"
+      (click)="goTo('/ordenes/crear')">
+      
+      <img src="assets/img/ordenes.jpg" 
+           alt="Órdenes" 
+           class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110 group-hover:brightness-110" />
+
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center transition duration-500 group-hover:bg-opacity-30">
+        <h2 class="text-3xl font-bold mb-2">Órdenes de Servicio</h2>
+        <p class="text-lg">Crea y gestiona órdenes de servicio.</p>
+      </div>
+    </div>
+
+  </div>
+</div>

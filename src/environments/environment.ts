@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api' // 👈 tu backend local para pruebas
+  apiUrl: 'https://serviautos-backend-production.up.railway.app/api' // 👈 tu backend local para pruebas
 };

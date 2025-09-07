@@ -1,15 +1,9 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "angular.json",
-      "use": "@vercel/angular"
-    }
+    { "src": "dist/serviautos-frontend/**/*", "use": "@vercel/static" }
   ],
   "routes": [
-    {
-      "src": "/.*",
-      "dest": "/dist/serviautos-frontend/index.html"
-    }
+    { "src": "/.*", "dest": "/index.html" }
   ]
 }

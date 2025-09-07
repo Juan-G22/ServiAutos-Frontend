@@ -62,10 +62,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "frontend-todotech:build:production"
+              "buildTarget": "serviautos-frontend:build:production"
             },
             "development": {
-              "buildTarget": "frontend-todotech:build:development"
+              "buildTarget": "serviautos-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"

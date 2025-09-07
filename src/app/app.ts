@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./app.scss']
 })
 export class App {
-  protected readonly title = signal('frontend-todotech');
+  protected readonly title = signal('serviautos-frontend');
 
   // Guarda la URL actual
   currentUrl = signal('');

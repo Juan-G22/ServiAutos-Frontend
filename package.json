@@ -53,13 +53,13 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Juan-G22/frontend-todotech.git"
+    "url": "git+https://github.com/Juan-G22/ServiAutos-Frontend.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Juan-G22/frontend-todotech/issues"
+    "url": "https://github.com/Juan-G22/ServiAutos-Frontend/issues"
   },
-  "homepage": "https://github.com/Juan-G22/frontend-todotech#readme"
+  "homepage": "https://github.com/Juan-G22/ServiAutos-Frontend#readme"
 }

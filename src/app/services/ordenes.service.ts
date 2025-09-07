@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Orden {
   id?: string;
@@ -22,7 +23,7 @@ export interface Orden {
   providedIn: 'root'
 })
 export class OrdenesService {
-  private apiUrl = 'https://serviautos-backend-production.up.railway.app/api/orders';
+  private apiUrl = `${environment.apiUrl}/orders`;
 
   constructor(private http: HttpClient) {}
 

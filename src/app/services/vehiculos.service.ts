@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Vehiculo {
   id: string;
@@ -14,7 +15,7 @@ export interface Vehiculo {
   providedIn: 'root'
 })
 export class VehiculosService {
-  private apiUrl = 'https://serviautos-backend-production.up.railway.app/api/vehicles';
+  private apiUrl = `${environment.apiUrl}/vehicles`;
 
   constructor(private http: HttpClient) {}
 

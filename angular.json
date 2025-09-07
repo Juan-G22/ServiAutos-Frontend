@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "frontend-todotech": {
+    "serviautos-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {

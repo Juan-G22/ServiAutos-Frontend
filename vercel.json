@@ -1,11 +1,11 @@
 {
   "version": 2,
   "builds": [
-    { "src": "dist/serviautos-frontend/**", "use": "@vercel/static" }
+    { "src": "dist/serviautos-frontend/browser/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/.*", "dest": "index.html" }
+    { "src": "/.*", "dest": "/index.html" }
   ]
 }
 

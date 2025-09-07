@@ -22,7 +22,7 @@ export interface Orden {
   providedIn: 'root'
 })
 export class OrdenesService {
-  private apiUrl = 'http://localhost:8080/api/orders';
+  private apiUrl = 'https://serviautos-backend-production.up.railway.app/api/ordenes';
 
   constructor(private http: HttpClient) {}
 

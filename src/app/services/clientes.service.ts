@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ClientesService {
 
-  private apiUrl = 'http://localhost:8080/api/clients';
+  private apiUrl = 'https://serviautos-backend-production.up.railway.app/api/ordenes';
 
   constructor(private http: HttpClient) {}
 

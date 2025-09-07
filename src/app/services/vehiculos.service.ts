@@ -14,7 +14,7 @@ export interface Vehiculo {
   providedIn: 'root'
 })
 export class VehiculosService {
-  private apiUrl = 'https://serviautos-backend-production.up.railway.app/api/ordenes';
+  private apiUrl = 'https://serviautos-backend-production.up.railway.app/api/vehicles';
 
   constructor(private http: HttpClient) {}
 

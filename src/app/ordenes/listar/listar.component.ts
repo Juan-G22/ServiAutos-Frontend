@@ -39,8 +39,17 @@ export class ListarOrdenesComponent implements OnInit {
 
   editarOrden(id: string | undefined) {
     if (!id) return;
-    this.router.navigate(['/ordenes/editar', id]);
+    this.router.navigate(['/ordenes/editar', id]); // modo normal
   }
+
+  atenderOrden(id: string | undefined) {
+    if (!id) return;
+    this.router.navigate(
+      ['/ordenes/editar', id],
+      { queryParams: { mode: 'attend' } }   // 👈 modo atender
+    );
+  }
+
 
   eliminarOrden(id: string | undefined) {
     if (!id) return;

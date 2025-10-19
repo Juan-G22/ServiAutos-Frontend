@@ -120,26 +120,6 @@
           </button>
         </div>
 
-        <!-- Debug info -->
-        <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
-          <strong>🔍 Debug Info:</strong> 
-          <div class="mt-1">
-            Total de repuestos: <span class="font-bold text-blue-600">{{ getNumeroRepuestos() }}</span>
-          </div>
-          <div *ngIf="orden.spareParts && orden.spareParts.length > 0" class="mt-2 text-xs">
-            <div class="font-semibold mb-1">Repuestos cargados:</div>
-            <div *ngFor="let sp of orden.spareParts; let i = index" class="ml-2">
-              • <span class="font-bold">{{ sp.name || 'Sin nombre' }}</span> - 
-              Cantidad: <span class="font-mono">{{ sp.amount }}</span> - 
-              Precio: <span class="font-mono">${{ sp.price | number:'1.0-0' }}</span> - 
-              ID: <span class="text-gray-500">{{ sp.idSparePart }}</span>
-            </div>
-          </div>
-          <div *ngIf="!orden.spareParts || orden.spareParts.length === 0" class="mt-1 text-xs text-red-600">
-            ⚠️ No hay repuestos en la orden
-          </div>
-        </div>
-
         <div *ngIf="orden.spareParts && orden.spareParts.length > 0" class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">

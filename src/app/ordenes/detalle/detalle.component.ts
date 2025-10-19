@@ -59,44 +59,9 @@ export class DetalleOrdenComponent implements OnInit {
       repuestos: this.inventarioService.listarTodosRepuestos()
     }).subscribe({
       next: (resultado) => {
-        console.log('🔍 RESULTADO COMPLETO DEL BACKEND:', JSON.stringify(resultado.orden, null, 2));
-        console.log('🔑 Todas las propiedades de la orden:', Object.keys(resultado.orden));
-        
         this.orden = resultado.orden;
         this.tecnicos = resultado.tecnicos;
         this.repuestos = resultado.repuestos.filter(r => r.availableStock > 0);
-
-        // Verificar todos los campos posibles para repuestos
-        console.log('📦 orden.spareParts:', this.orden.spareParts);
-        console.log('📦 orden.spare_parts:', (this.orden as any).spare_parts);
-        console.log('📦 orden.spareparts:', (this.orden as any).spareparts);
-        console.log('📦 orden.parts:', (this.orden as any).parts);
-        console.log('📦 orden.repuestos:', (this.orden as any).repuestos);
-        
-        // Intentar encontrar el array de repuestos con cualquier nombre
-        const posiblesNombres = ['spareParts', 'spare_parts', 'spareparts', 'parts', 'repuestos'];
-        let repuestosEncontrados = null;
-        
-        for (const nombre of posiblesNombres) {
-          if ((this.orden as any)[nombre]) {
-            console.log(`✅ ENCONTRADO: Array de repuestos en campo "${nombre}"`);
-            repuestosEncontrados = (this.orden as any)[nombre];
-            // Si no está en spareParts, copiarlo ahí
-            if (nombre !== 'spareParts') {
-              this.orden.spareParts = repuestosEncontrados;
-              console.log(`🔄 Copiando de ${nombre} a spareParts`);
-            }
-            break;
-          }
-        }
-        
-        if (repuestosEncontrados) {
-          console.log('📊 Número de repuestos encontrados:', repuestosEncontrados.length);
-          console.log('🔍 Primer repuesto:', JSON.stringify(repuestosEncontrados[0], null, 2));
-        } else {
-          console.log('❌ NO SE ENCONTRÓ ningún array de repuestos en la orden');
-        }
-
         this.loading = false;
       },
       error: (error) => {
@@ -107,15 +72,6 @@ export class DetalleOrdenComponent implements OnInit {
     });
   }
 
-  enriquecerRepuestos(): void {
-    // Ya no es necesario enriquecer porque MongoDB ya trae los datos completos
-    if (!this.orden || !this.orden.spareParts || this.orden.spareParts.length === 0) {
-      console.log('⚠️ No hay repuestos en esta orden');
-      return;
-    }
-
-    console.log('✅ Repuestos cargados desde MongoDB:', JSON.stringify(this.orden.spareParts, null, 2));
-  }
 
   cargarOrden(): void {
     // Este método ahora solo se usa después de agregar/remover repuestos

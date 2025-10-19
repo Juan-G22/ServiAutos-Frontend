@@ -59,18 +59,42 @@ export class DetalleOrdenComponent implements OnInit {
       repuestos: this.inventarioService.listarTodosRepuestos()
     }).subscribe({
       next: (resultado) => {
+        console.log('🔍 RESULTADO COMPLETO DEL BACKEND:', JSON.stringify(resultado.orden, null, 2));
+        console.log('🔑 Todas las propiedades de la orden:', Object.keys(resultado.orden));
+        
         this.orden = resultado.orden;
         this.tecnicos = resultado.tecnicos;
         this.repuestos = resultado.repuestos.filter(r => r.availableStock > 0);
 
-        console.log('✅ Orden cargada:', this.orden);
-        console.log('📦 Repuestos en la orden:', this.orden.spareParts);
-        console.log('📋 Repuestos disponibles:', this.repuestos.length);
-
-        // Enriquecer los repuestos de la orden con los nombres
-        if (this.orden.spareParts && this.orden.spareParts.length > 0) {
-          this.enriquecerRepuestos();
-          console.log('✨ Repuestos enriquecidos:', this.orden.spareParts);
+        // Verificar todos los campos posibles para repuestos
+        console.log('📦 orden.spareParts:', this.orden.spareParts);
+        console.log('📦 orden.spare_parts:', (this.orden as any).spare_parts);
+        console.log('📦 orden.spareparts:', (this.orden as any).spareparts);
+        console.log('📦 orden.parts:', (this.orden as any).parts);
+        console.log('📦 orden.repuestos:', (this.orden as any).repuestos);
+        
+        // Intentar encontrar el array de repuestos con cualquier nombre
+        const posiblesNombres = ['spareParts', 'spare_parts', 'spareparts', 'parts', 'repuestos'];
+        let repuestosEncontrados = null;
+        
+        for (const nombre of posiblesNombres) {
+          if ((this.orden as any)[nombre]) {
+            console.log(`✅ ENCONTRADO: Array de repuestos en campo "${nombre}"`);
+            repuestosEncontrados = (this.orden as any)[nombre];
+            // Si no está en spareParts, copiarlo ahí
+            if (nombre !== 'spareParts') {
+              this.orden.spareParts = repuestosEncontrados;
+              console.log(`🔄 Copiando de ${nombre} a spareParts`);
+            }
+            break;
+          }
+        }
+        
+        if (repuestosEncontrados) {
+          console.log('📊 Número de repuestos encontrados:', repuestosEncontrados.length);
+          console.log('🔍 Primer repuesto:', JSON.stringify(repuestosEncontrados[0], null, 2));
+        } else {
+          console.log('❌ NO SE ENCONTRÓ ningún array de repuestos en la orden');
         }
 
         this.loading = false;

@@ -84,47 +84,13 @@ export class DetalleOrdenComponent implements OnInit {
   }
 
   enriquecerRepuestos(): void {
+    // Ya no es necesario enriquecer porque MongoDB ya trae los datos completos
     if (!this.orden || !this.orden.spareParts || this.orden.spareParts.length === 0) {
-      console.log('⚠️ No hay repuestos para enriquecer');
+      console.log('⚠️ No hay repuestos en esta orden');
       return;
     }
 
-    console.log('🔍 Enriqueciendo repuestos...');
-    console.log('📦 Repuestos antes de enriquecer:', JSON.stringify(this.orden.spareParts, null, 2));
-
-    // Buscar los nombres de los repuestos que no los tengan
-    this.orden.spareParts = this.orden.spareParts.map((sp) => {
-      console.log(`Procesando repuesto ID: ${sp.sparePartId}`);
-      
-      // Si ya tiene el nombre, devolverlo tal cual
-      if (sp.sparePartName) {
-        console.log(`✓ Ya tiene nombre: ${sp.sparePartName}`);
-        return sp;
-      }
-
-      // Si no tiene nombre, buscarlo en el inventario
-      const repuesto = this.repuestos.find(r => r.id === sp.sparePartId);
-      if (repuesto) {
-        console.log(`✓ Encontrado en inventario: ${repuesto.name}`);
-        return {
-          ...sp,
-          sparePartName: repuesto.name,
-          unitValue: sp.unitValue || repuesto.unitValue,
-          totalValue: sp.totalValue || (sp.quantity * repuesto.unitValue)
-        };
-      }
-
-      // Si no se encuentra, devolver con nombre por defecto
-      console.log(`⚠️ No encontrado en inventario, usando nombre genérico`);
-      return {
-        ...sp,
-        sparePartName: `Repuesto No Encontrado`,
-        unitValue: sp.unitValue || 0,
-        totalValue: sp.totalValue || 0
-      };
-    });
-
-    console.log('✅ Repuestos después de enriquecer:', JSON.stringify(this.orden.spareParts, null, 2));
+    console.log('✅ Repuestos cargados desde MongoDB:', JSON.stringify(this.orden.spareParts, null, 2));
   }
 
   cargarOrden(): void {
@@ -237,13 +203,13 @@ export class DetalleOrdenComponent implements OnInit {
     });
   }
 
-  removerRepuesto(sparePartId: string): void {
+  removerRepuesto(idSparePart: string): void {
     if (!confirm('¿Está seguro de remover este repuesto de la orden?')) {
       return;
     }
 
     this.loading = true;
-    this.ordenesService.removerRepuesto(this.ordenId, sparePartId).subscribe({
+    this.ordenesService.removerRepuesto(this.ordenId, idSparePart).subscribe({
       next: () => {
         this.successMessage = 'Repuesto removido con éxito ✅';
         this.cargarOrden();

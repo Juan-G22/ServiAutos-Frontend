@@ -23,11 +23,10 @@ export interface Orden {
 }
 
 export interface OrderSparePart {
-  sparePartId: string;
-  sparePartName?: string;
-  quantity: number;
-  unitValue?: number;
-  totalValue?: number;
+  idSparePart: string;      // Campo real en MongoDB
+  name: string;              // Campo real en MongoDB
+  amount: number;            // Campo real en MongoDB
+  price: number;             // Campo real en MongoDB
 }
 
 export interface AddSparePartRequest {

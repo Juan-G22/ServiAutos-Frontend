@@ -1,22 +1,125 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Registrar Cliente</h2>
-
-    <div *ngIf="successMessage" class="mb-4 text-green-600">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="mb-4 text-red-600">{{ errorMessage }}</div>
-
-    <form (ngSubmit)="crearCliente()">
-      <input [(ngModel)]="name" name="name" placeholder="Nombre" class="w-full mb-3 px-3 py-2 border rounded" required />
-      <input [(ngModel)]="lastName" name="lastName" placeholder="Apellido" class="w-full mb-3 px-3 py-2 border rounded" required />
-      <input [(ngModel)]="document" name="document" placeholder="Documento" class="w-full mb-3 px-3 py-2 border rounded" required />
-      <input [(ngModel)]="email" name="email" placeholder="Correo" type="email" class="w-full mb-3 px-3 py-2 border rounded" required />
-      <input [(ngModel)]="address" name="address" placeholder="Dirección" class="w-full mb-3 px-3 py-2 border rounded" required />
-      <input [(ngModel)]="phone" name="phone" placeholder="Teléfono" class="w-full mb-3 px-3 py-2 border rounded" required />
-
-      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-        Registrar
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100 p-8">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <button
+        routerLink="/clientes"
+        class="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-semibold"
+      >
+        ← Volver a Clientes
       </button>
-    </form>
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">➕ Crear Cliente</h1>
+      <p class="text-gray-600">Registra un nuevo cliente en el sistema</p>
+    </div>
+
+    <!-- Mensajes -->
+    <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Formulario -->
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <form (ngSubmit)="crearCliente()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Nombre -->
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Nombre *</label>
+            <input
+              [(ngModel)]="name"
+              name="name"
+              type="text"
+              placeholder="Ingresa el nombre"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <!-- Apellido -->
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Apellido *</label>
+            <input
+              [(ngModel)]="lastName"
+              name="lastName"
+              type="text"
+              placeholder="Ingresa el apellido"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <!-- Documento -->
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Documento *</label>
+            <input
+              [(ngModel)]="document"
+              name="document"
+              type="text"
+              placeholder="Número de documento"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+
+          <!-- Teléfono -->
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Teléfono *</label>
+            <input
+              [(ngModel)]="phone"
+              name="phone"
+              type="tel"
+              placeholder="Número de teléfono"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mt-6">
+          <label class="block text-sm font-bold text-gray-700 mb-2">Correo Electrónico *</label>
+          <input
+            [(ngModel)]="email"
+            name="email"
+            type="email"
+            placeholder="correo@ejemplo.com"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            required
+          />
+        </div>
+
+        <!-- Dirección -->
+        <div class="mt-6">
+          <label class="block text-sm font-bold text-gray-700 mb-2">Dirección *</label>
+          <textarea
+            [(ngModel)]="address"
+            name="address"
+            rows="3"
+            placeholder="Dirección completa"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Botones -->
+        <div class="mt-8 flex gap-4">
+          <button
+            type="submit"
+            class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition font-semibold shadow-lg"
+          >
+            💾 Crear Cliente
+          </button>
+          <button
+            type="button"
+            routerLink="/clientes"
+            class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition font-semibold"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
-

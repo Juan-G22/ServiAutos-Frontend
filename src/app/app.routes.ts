@@ -7,6 +7,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 // Vehículos
 import { ListarVehiculosComponent as ListarVehiculosComponent } from './vehiculos/listar/listar.component';
 import { CrearVehiculoComponent as CrearVehiculoComponent } from './vehiculos/crear/crear.component';
+import { EditarVehiculoComponent } from './vehiculos/editar/editar.component';
 
 // Órdenes
 import { ListarOrdenesComponent } from './ordenes/listar/listar.component';
@@ -29,6 +30,7 @@ export const routes: Routes = [
   // Vehículos
   { path: 'vehiculos', component: ListarVehiculosComponent, canActivate: [authGuard] },
   { path: 'vehiculos/crear', component: CrearVehiculoComponent, canActivate: [authGuard] },
+  { path: 'vehiculos/editar/:id', component: EditarVehiculoComponent, canActivate: [authGuard] },
 
   // Órdenes
   { path: 'ordenes', component: ListarOrdenesComponent, canActivate: [authGuard] },

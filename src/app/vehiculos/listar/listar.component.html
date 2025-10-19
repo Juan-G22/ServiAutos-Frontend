@@ -1,43 +1,133 @@
-<div class="p-6">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Vehículos</h1>
-    <button 
-      class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
-      (click)="router.navigate(['/vehiculos/crear'])">
-      + Crear Vehículo
-    </button>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8 flex justify-between items-center">
+      <div>
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">🚗 Gestión de Vehículos</h1>
+        <p class="text-gray-600">Administra los vehículos de tus clientes</p>
+      </div>
+      <button
+        routerLink="/vehiculos/crear"
+        class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition font-semibold shadow-lg"
+      >
+        ➕ Crear Vehículo
+      </button>
+    </div>
+
+    <!-- Mensajes -->
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+      {{ successMessage }}
+    </div>
+
+    <!-- Buscador -->
+    <div class="mb-6 bg-white rounded-lg shadow-lg p-4">
+      <input
+        [(ngModel)]="search"
+        type="text"
+        placeholder="🔍 Buscar por placa, marca o modelo..."
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-blue-100 text-sm font-medium">Total de Vehículos</p>
+            <p class="text-4xl font-bold mt-2">{{ getTotalVehiculos() }}</p>
+          </div>
+          <div class="text-6xl opacity-50">🚗</div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg shadow-lg p-6 text-white">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-indigo-100 text-sm font-medium">Vehículos Filtrados</p>
+            <p class="text-4xl font-bold mt-2">{{ vehiculosFiltrados.length }}</p>
+          </div>
+          <div class="text-6xl opacity-50">📋</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Vehículos -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gradient-to-r from-blue-100 to-indigo-100">
+            <tr>
+              <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Placa
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Marca
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Modelo
+              </th>
+              <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Propietario
+              </th>
+              <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let vehiculo of vehiculosFiltrados" class="hover:bg-blue-50 transition">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
+                    🚗
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-bold text-gray-900 font-mono">
+                      {{ vehiculo.licencePlate }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-semibold text-gray-900">{{ vehiculo.brand }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{ vehiculo.model }}</div>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm text-gray-900">{{ getClientName(vehiculo.clientId) }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                <button
+                  (click)="editarVehiculo(vehiculo.id)"
+                  class="text-blue-600 hover:text-blue-900 mr-4 font-semibold"
+                  title="Editar"
+                >
+                  ✏️ Editar
+                </button>
+                <button
+                  (click)="eliminarVehiculo(vehiculo.id)"
+                  class="text-red-600 hover:text-red-900 font-semibold"
+                  title="Eliminar"
+                >
+                  🗑️ Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Sin resultados -->
+        <div *ngIf="vehiculosFiltrados.length === 0" class="text-center py-12">
+          <div class="text-6xl mb-4">🔍</div>
+          <p class="text-gray-500 text-lg">No se encontraron vehículos</p>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <!-- Buscador -->
-  <input
-    [(ngModel)]="search"
-    type="text"
-    placeholder="Buscar por placa, marca o modelo..."
-    class="w-full border p-2 rounded mb-4 focus:ring-2 focus:ring-indigo-500"
-  />
-
-  <!-- Tabla de vehículos -->
-  <table class="w-full border-collapse bg-white shadow rounded-xl overflow-hidden">
-    <thead class="bg-gray-100 text-gray-600">
-      <tr>
-        <th class="p-3 text-left">Placa</th>
-        <th class="p-3 text-left">Marca</th>
-        <th class="p-3 text-left">Modelo</th>
-        <th class="p-3 text-left">Cliente</th>
-        <th class="p-3 text-left">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let vehiculo of vehiculosFiltrados" class="hover:bg-gray-50 transition">
-        <td class="p-3 font-semibold">{{ vehiculo.licencePlate }}</td>
-        <td class="p-3">{{ vehiculo.brand }}</td>
-        <td class="p-3">{{ vehiculo.model }}</td>
-        <td class="p-3">{{ vehiculo.clientId }}</td>
-        <td class="p-3 flex gap-2">
-          <button (click)="editarVehiculo(vehiculo.id)" class="text-blue-600 hover:underline">Editar</button>
-          <button (click)="eliminarVehiculo(vehiculo.id)" class="text-red-600 hover:underline">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>
+

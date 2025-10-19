@@ -8,8 +8,8 @@
       >
         ← Volver a Vehículos
       </button>
-      <h1 class="text-4xl font-bold text-gray-800 mb-2">➕ Crear Vehículo</h1>
-      <p class="text-gray-600">Registra un nuevo vehículo en el sistema</p>
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">✏️ Editar Vehículo</h1>
+      <p class="text-gray-600">Actualiza la información del vehículo</p>
     </div>
 
     <!-- Mensajes -->
@@ -20,9 +20,15 @@
       {{ errorMessage }}
     </div>
 
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <p class="mt-4 text-gray-600">Cargando vehículo...</p>
+    </div>
+
     <!-- Formulario -->
-    <div class="bg-white rounded-lg shadow-lg p-8">
-      <form (ngSubmit)="guardarVehiculo()">
+    <div *ngIf="!loading" class="bg-white rounded-lg shadow-lg p-8">
+      <form (ngSubmit)="actualizarVehiculo()">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Placa -->
           <div>
@@ -86,7 +92,7 @@
             type="submit"
             class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition font-semibold shadow-lg"
           >
-            💾 Crear Vehículo
+            💾 Actualizar Vehículo
           </button>
           <button
             type="button"
@@ -100,3 +106,4 @@
     </div>
   </div>
 </div>
+

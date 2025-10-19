@@ -129,7 +129,7 @@
           <div *ngIf="orden.spareParts && orden.spareParts.length > 0" class="mt-1 text-xs text-gray-600">
             Repuestos: 
             <span *ngFor="let sp of orden.spareParts; let i = index">
-              {{ sp.sparePartName || 'Sin nombre' }} ({{ sp.quantity }}){{ i < orden.spareParts.length - 1 ? ', ' : '' }}
+              {{ sp.name || 'Sin nombre' }} ({{ sp.amount }}){{ i < orden.spareParts.length - 1 ? ', ' : '' }}
             </span>
           </div>
         </div>
@@ -148,15 +148,15 @@
             <tbody class="bg-white divide-y divide-gray-200">
               <tr *ngFor="let sp of orden.spareParts" class="hover:bg-gray-50">
                 <td class="px-6 py-4">
-                  <div class="font-semibold text-gray-900">{{ sp.sparePartName || 'Repuesto' }}</div>
-                  <div class="text-xs text-gray-500">ID: {{ sp.sparePartId }}</div>
+                  <div class="font-semibold text-gray-900">{{ sp.name || 'Repuesto' }}</div>
+                  <div class="text-xs text-gray-500">ID: {{ sp.idSparePart }}</div>
                 </td>
-                <td class="px-6 py-4 text-sm text-gray-900">{{ sp.quantity }}</td>
-                <td class="px-6 py-4 text-sm text-gray-900">${{ (sp.unitValue || 0) | number:'1.0-0' }}</td>
-                <td class="px-6 py-4 text-sm font-bold text-gray-900">${{ (sp.totalValue || 0) | number:'1.0-0' }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900">{{ sp.amount }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900">${{ sp.price | number:'1.0-0' }}</td>
+                <td class="px-6 py-4 text-sm font-bold text-gray-900">${{ (sp.amount * sp.price) | number:'1.0-0' }}</td>
                 <td *ngIf="puedeEditar()" class="px-6 py-4">
                   <button
-                    (click)="removerRepuesto(sp.sparePartId)"
+                    (click)="removerRepuesto(sp.idSparePart)"
                     class="text-red-600 hover:text-red-900"
                     title="Remover"
                   >

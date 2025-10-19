@@ -84,18 +84,28 @@ export class DetalleOrdenComponent implements OnInit {
   }
 
   enriquecerRepuestos(): void {
-    if (!this.orden || !this.orden.spareParts) return;
+    if (!this.orden || !this.orden.spareParts || this.orden.spareParts.length === 0) {
+      console.log('⚠️ No hay repuestos para enriquecer');
+      return;
+    }
+
+    console.log('🔍 Enriqueciendo repuestos...');
+    console.log('📦 Repuestos antes de enriquecer:', JSON.stringify(this.orden.spareParts, null, 2));
 
     // Buscar los nombres de los repuestos que no los tengan
     this.orden.spareParts = this.orden.spareParts.map((sp) => {
+      console.log(`Procesando repuesto ID: ${sp.sparePartId}`);
+      
       // Si ya tiene el nombre, devolverlo tal cual
       if (sp.sparePartName) {
+        console.log(`✓ Ya tiene nombre: ${sp.sparePartName}`);
         return sp;
       }
 
       // Si no tiene nombre, buscarlo en el inventario
       const repuesto = this.repuestos.find(r => r.id === sp.sparePartId);
       if (repuesto) {
+        console.log(`✓ Encontrado en inventario: ${repuesto.name}`);
         return {
           ...sp,
           sparePartName: repuesto.name,
@@ -105,13 +115,16 @@ export class DetalleOrdenComponent implements OnInit {
       }
 
       // Si no se encuentra, devolver con nombre por defecto
+      console.log(`⚠️ No encontrado en inventario, usando nombre genérico`);
       return {
         ...sp,
-        sparePartName: `Repuesto ${sp.sparePartId}`,
+        sparePartName: `Repuesto No Encontrado`,
         unitValue: sp.unitValue || 0,
         totalValue: sp.totalValue || 0
       };
     });
+
+    console.log('✅ Repuestos después de enriquecer:', JSON.stringify(this.orden.spareParts, null, 2));
   }
 
   cargarOrden(): void {
@@ -302,6 +315,10 @@ export class DetalleOrdenComponent implements OnInit {
   puedeEditar(): boolean {
     const estado = this.orden?.status?.toUpperCase();
     return estado !== 'COMPLETED' && estado !== 'FINALIZADA' && estado !== 'CANCELLED' && estado !== 'CANCELADA';
+  }
+
+  getNumeroRepuestos(): number {
+    return this.orden?.spareParts?.length || 0;
   }
 }
 

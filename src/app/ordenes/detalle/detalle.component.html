@@ -120,6 +120,20 @@
           </button>
         </div>
 
+        <!-- Debug info -->
+        <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+          <strong>🔍 Debug Info:</strong> 
+          <div class="mt-1">
+            Total de repuestos: <span class="font-bold">{{ getNumeroRepuestos() }}</span>
+          </div>
+          <div *ngIf="orden.spareParts && orden.spareParts.length > 0" class="mt-1 text-xs text-gray-600">
+            Repuestos: 
+            <span *ngFor="let sp of orden.spareParts; let i = index">
+              {{ sp.sparePartName || 'Sin nombre' }} ({{ sp.quantity }}){{ i < orden.spareParts.length - 1 ? ', ' : '' }}
+            </span>
+          </div>
+        </div>
+
         <div *ngIf="orden.spareParts && orden.spareParts.length > 0" class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">

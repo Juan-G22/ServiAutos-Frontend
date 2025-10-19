@@ -1,0 +1,269 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8 flex justify-between items-center">
+      <div>
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">🔧 Detalle de Orden</h1>
+        <p class="text-gray-600">Información completa de la orden de servicio</p>
+      </div>
+      <button
+        routerLink="/ordenes"
+        class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-semibold"
+      >
+        ← Volver a Órdenes
+      </button>
+    </div>
+
+    <!-- Mensajes -->
+    <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading && !orden" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <p class="mt-4 text-gray-600">Cargando orden...</p>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div *ngIf="orden" class="space-y-6">
+      
+      <!-- Información General -->
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-start mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Información General</h2>
+          <span [ngClass]="getEstadoClass(orden.status)" class="px-4 py-2 rounded-full text-sm font-semibold">
+            {{ getNombreEstado(orden.status) }}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div>
+            <p class="text-sm text-gray-600">ID de Orden</p>
+            <p class="font-mono font-semibold text-gray-900">{{ orden.id }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Cliente</p>
+            <p class="font-semibold text-gray-900">{{ orden.clientName || orden.clientId }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Vehículo</p>
+            <p class="font-semibold text-gray-900">{{ orden.vehiclePlate || orden.vehicleId }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Fecha de Servicio</p>
+            <p class="font-semibold text-gray-900">{{ orden.dateService || 'No especificada' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Valor Mano de Obra</p>
+            <p class="text-xl font-bold text-blue-600">${{ orden.laborValue | number:'1.0-0' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Valor Repuestos</p>
+            <p class="text-xl font-bold text-purple-600">${{ (orden.sparePartsValue || 0) | number:'1.0-0' }}</p>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-6 border-t border-gray-200">
+          <p class="text-sm text-gray-600 mb-2">Diagnóstico</p>
+          <p class="text-gray-900">{{ orden.diagnostic || 'Sin diagnóstico' }}</p>
+        </div>
+
+        <div class="mt-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg">
+          <p class="text-sm text-gray-600 mb-1">Valor Total</p>
+          <p class="text-3xl font-bold text-green-600">${{ (orden.totalValue || 0) | number:'1.0-0' }}</p>
+        </div>
+      </div>
+
+      <!-- Técnico Asignado -->
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-gray-800">👨‍🔧 Técnico Asignado</h2>
+          <button
+            *ngIf="puedeEditar()"
+            (click)="abrirModalTecnico()"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+          >
+            {{ orden.assignedTechnicianId ? '✏️ Cambiar Técnico' : '➕ Asignar Técnico' }}
+          </button>
+        </div>
+
+        <div *ngIf="orden.assignedTechnicianId" class="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
+          <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold">
+            {{ (orden.technicianName || 'T')[0] }}
+          </div>
+          <div>
+            <p class="font-bold text-gray-900">{{ orden.technicianName || 'Técnico Asignado' }}</p>
+            <p class="text-sm text-gray-600">ID: {{ orden.assignedTechnicianId }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="!orden.assignedTechnicianId" class="text-center py-8 text-gray-500">
+          <div class="text-4xl mb-2">👤</div>
+          <p>No hay técnico asignado a esta orden</p>
+        </div>
+      </div>
+
+      <!-- Repuestos Utilizados -->
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-gray-800">📦 Repuestos Utilizados</h2>
+          <button
+            *ngIf="puedeEditar()"
+            (click)="abrirModalRepuesto()"
+            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold"
+          >
+            ➕ Agregar Repuesto
+          </button>
+        </div>
+
+        <div *ngIf="orden.spareParts && orden.spareParts.length > 0" class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Repuesto</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cantidad</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio Unit.</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+                <th *ngIf="puedeEditar()" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let sp of orden.spareParts" class="hover:bg-gray-50">
+                <td class="px-6 py-4">
+                  <div class="font-semibold text-gray-900">{{ sp.sparePartName || 'Repuesto' }}</div>
+                  <div class="text-xs text-gray-500">ID: {{ sp.sparePartId }}</div>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-900">{{ sp.quantity }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900">${{ (sp.unitValue || 0) | number:'1.0-0' }}</td>
+                <td class="px-6 py-4 text-sm font-bold text-gray-900">${{ (sp.totalValue || 0) | number:'1.0-0' }}</td>
+                <td *ngIf="puedeEditar()" class="px-6 py-4">
+                  <button
+                    (click)="removerRepuesto(sp.sparePartId)"
+                    class="text-red-600 hover:text-red-900"
+                    title="Remover"
+                  >
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="!orden.spareParts || orden.spareParts.length === 0" class="text-center py-8 text-gray-500">
+          <div class="text-4xl mb-2">📭</div>
+          <p>No se han agregado repuestos a esta orden</p>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div *ngIf="puedeEditar()" class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">⚡ Acciones</h2>
+        <div class="flex gap-4">
+          <button
+            [routerLink]="['/ordenes/editar', ordenId]"
+            class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+          >
+            ✏️ Editar Orden
+          </button>
+          <button
+            (click)="finalizarOrden()"
+            class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold"
+          >
+            ✅ Finalizar Orden
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal Asignar Técnico -->
+<div *ngIf="mostrarModalTecnico" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Asignar Técnico</h3>
+    
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Seleccionar Técnico</label>
+      <select
+        [(ngModel)]="tecnicoSeleccionado"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      >
+        <option value="">Seleccione un técnico...</option>
+        <option *ngFor="let tecnico of tecnicos" [value]="tecnico.id">
+          {{ tecnico.name }} - {{ tecnico.specialization }}
+        </option>
+      </select>
+    </div>
+
+    <div class="flex gap-4">
+      <button
+        (click)="asignarTecnico()"
+        [disabled]="!tecnicoSeleccionado || loading"
+        class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        {{ loading ? 'Asignando...' : 'Asignar' }}
+      </button>
+      <button
+        (click)="cerrarModalTecnico()"
+        [disabled]="loading"
+        class="flex-1 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agregar Repuesto -->
+<div *ngIf="mostrarModalRepuesto" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Agregar Repuesto</h3>
+    
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Seleccionar Repuesto</label>
+      <select
+        [(ngModel)]="repuestoSeleccionado"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      >
+        <option value="">Seleccione un repuesto...</option>
+        <option *ngFor="let repuesto of repuestos" [value]="repuesto.id">
+          {{ repuesto.name }} - Stock: {{ repuesto.availableStock }} - ${{ repuesto.unitValue | number:'1.0-0' }}
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-6">
+      <label class="block text-sm font-medium text-gray-700 mb-2">Cantidad</label>
+      <input
+        type="number"
+        [(ngModel)]="cantidadRepuesto"
+        min="1"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+    </div>
+
+    <div class="flex gap-4">
+      <button
+        (click)="agregarRepuesto()"
+        [disabled]="!repuestoSeleccionado || cantidadRepuesto <= 0 || loading"
+        class="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        {{ loading ? 'Agregando...' : 'Agregar' }}
+      </button>
+      <button
+        (click)="cerrarModalRepuesto()"
+        [disabled]="loading"
+        class="flex-1 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+

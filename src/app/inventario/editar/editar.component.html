@@ -1,0 +1,206 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">✏️ Editar Repuesto</h1>
+      <p class="text-gray-600">Actualizar información del repuesto</p>
+    </div>
+
+    <!-- Mensajes -->
+    <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loadingData" class="bg-white rounded-lg shadow-lg p-12 text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <p class="mt-4 text-gray-600">Cargando datos del repuesto...</p>
+    </div>
+
+    <!-- Formulario -->
+    <form *ngIf="!loadingData" (ngSubmit)="actualizarRepuesto()" class="bg-white rounded-lg shadow-lg p-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Nombre -->
+        <div class="col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Nombre del Repuesto <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="repuesto.name"
+            name="name"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Ej: Filtro de Aceite Premium"
+          />
+        </div>
+
+        <!-- Detalle/Descripción -->
+        <div class="col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Descripción
+          </label>
+          <textarea
+            [(ngModel)]="repuesto.detail"
+            name="detail"
+            rows="3"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Descripción detallada del repuesto..."
+          ></textarea>
+        </div>
+
+        <!-- Categoría -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Categoría <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="repuesto.category"
+            name="category"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Ej: Filtros, Frenos, Motor..."
+            list="categories"
+          />
+          <datalist id="categories">
+            <option value="Filtros">
+            <option value="Frenos">
+            <option value="Motor">
+            <option value="Suspensión">
+            <option value="Sistema Eléctrico">
+            <option value="Transmisión">
+            <option value="Lubricantes">
+            <option value="Llantas">
+          </datalist>
+        </div>
+
+        <!-- Marca -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Marca <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="repuesto.brand"
+            name="brand"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Ej: Bosch, Mann-Filter..."
+          />
+        </div>
+
+        <!-- Código/Número de Parte -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Código/Número de Parte <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="repuesto.partNumber"
+            name="partNumber"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono"
+            placeholder="Ej: W712/75"
+          />
+        </div>
+
+        <!-- Precio Unitario -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Precio Unitario <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-3 top-2 text-gray-500">$</span>
+            <input
+              type="number"
+              [(ngModel)]="repuesto.unitValue"
+              name="unitValue"
+              required
+              min="0"
+              step="0.01"
+              class="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="0.00"
+            />
+          </div>
+        </div>
+
+        <!-- Stock Disponible (solo lectura, usar gestión de stock) -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Stock Disponible
+          </label>
+          <input
+            type="number"
+            [(ngModel)]="repuesto.availableStock"
+            name="availableStock"
+            readonly
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+          />
+          <p class="text-xs text-blue-600 mt-1">
+            📝 Para modificar el stock, usa "Gestionar Stock" desde el listado
+          </p>
+        </div>
+
+        <!-- Stock Mínimo -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Stock Mínimo
+          </label>
+          <input
+            type="number"
+            [(ngModel)]="repuesto.minimumStock"
+            name="minimumStock"
+            min="0"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="0"
+          />
+          <p class="text-xs text-gray-500 mt-1">Alerta cuando el stock sea menor o igual a este valor</p>
+        </div>
+
+        <!-- Ubicación -->
+        <div class="col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Ubicación en Almacén
+          </label>
+          <input
+            type="text"
+            [(ngModel)]="repuesto.location"
+            name="location"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Ej: Estante A-1, Bodega 2, etc."
+          />
+        </div>
+
+      </div>
+
+      <!-- Botones -->
+      <div class="flex gap-4 mt-8">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {{ loading ? 'Actualizando...' : '💾 Actualizar Repuesto' }}
+        </button>
+        <button
+          type="button"
+          (click)="cancelar()"
+          [disabled]="loading"
+          class="flex-1 px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          ❌ Cancelar
+        </button>
+      </div>
+
+      <p class="text-sm text-gray-500 mt-4 text-center">
+        Los campos marcados con <span class="text-red-500">*</span> son obligatorios
+      </p>
+    </form>
+  </div>
+</div>
+

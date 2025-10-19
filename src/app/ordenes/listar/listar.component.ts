@@ -37,6 +37,11 @@ export class ListarOrdenesComponent implements OnInit {
     );
   }
 
+  verDetalle(id: string | undefined) {
+    if (!id) return;
+    this.router.navigate(['/ordenes/detalle', id]);
+  }
+
   editarOrden(id: string | undefined) {
     if (!id) return;
     this.router.navigate(['/ordenes/editar', id]); // modo normal

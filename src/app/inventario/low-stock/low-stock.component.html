@@ -1,0 +1,151 @@
+<div class="min-h-screen bg-gradient-to-br from-orange-50 to-red-100 p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">⚠️ Repuestos con Stock Bajo</h1>
+      <p class="text-gray-600">Repuestos que necesitan reposición urgente</p>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Botones de navegación -->
+    <div class="mb-6">
+      <button
+        routerLink="/inventario"
+        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+      >
+        ← Volver al Inventario
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+      <p class="mt-4 text-gray-600">Cargando repuestos con stock bajo...</p>
+    </div>
+
+    <!-- Lista de repuestos con stock bajo -->
+    <div *ngIf="!loading && repuestosStockBajo.length > 0" class="space-y-4">
+      <div
+        *ngFor="let repuesto of repuestosStockBajo"
+        [ngClass]="getUrgenciaClass(repuesto)"
+        class="bg-white rounded-lg shadow-lg p-6 border-l-4 transition hover:shadow-xl"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Información del repuesto -->
+          <div class="md:col-span-2">
+            <div class="flex items-start gap-3 mb-3">
+              <span class="text-3xl">{{ getUrgenciaIcono(repuesto) }}</span>
+              <div class="flex-1">
+                <h3 class="text-xl font-bold text-gray-800">{{ repuesto.name }}</h3>
+                <p class="text-sm text-gray-600 mt-1">{{ repuesto.detail }}</p>
+                <div class="flex gap-4 mt-3 text-sm">
+                  <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-mono">
+                    {{ repuesto.partNumber }}
+                  </span>
+                  <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full">
+                    {{ repuesto.category }}
+                  </span>
+                  <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full">
+                    {{ repuesto.brand }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estadísticas de stock -->
+          <div class="border-l-2 border-gray-200 pl-6">
+            <div class="space-y-4">
+              <div>
+                <p class="text-sm text-gray-600">Stock Disponible</p>
+                <p class="text-3xl font-bold text-red-600">{{ repuesto.availableStock }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600">Stock Mínimo</p>
+                <p class="text-xl font-semibold text-gray-700">{{ repuesto.minimumStock }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-600">Cantidad Sugerida</p>
+                <p class="text-2xl font-bold text-green-600">+{{ getCantidadSugerida(repuesto) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Información adicional y acciones -->
+        <div class="mt-6 pt-6 border-t border-gray-200 flex justify-between items-center">
+          <div class="space-y-1">
+            <p class="text-sm text-gray-600">
+              <span class="font-semibold">Ubicación:</span> {{ repuesto.location || 'No especificada' }}
+            </p>
+            <p class="text-sm text-gray-600">
+              <span class="font-semibold">Precio unitario:</span> 
+              ${{ repuesto.unitValue | number:'1.0-0' }}
+            </p>
+            <p class="text-sm font-semibold text-purple-700">
+              <span class="font-semibold">Inversión sugerida:</span> 
+              ${{ getCantidadSugerida(repuesto) * repuesto.unitValue | number:'1.0-0' }}
+            </p>
+          </div>
+          
+          <div class="flex gap-2">
+            <button
+              (click)="irAStock(repuesto.id)"
+              class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-semibold"
+            >
+              📦 Agregar Stock
+            </button>
+            <button
+              (click)="verDetalle(repuesto.id)"
+              class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+            >
+              ✏️ Ver Detalle
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sin resultados -->
+    <div *ngIf="!loading && repuestosStockBajo.length === 0" class="bg-white rounded-lg shadow-lg p-12 text-center">
+      <div class="text-6xl mb-4">✅</div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">¡Todo está en orden!</h2>
+      <p class="text-gray-600">No hay repuestos con stock bajo en este momento</p>
+      <button
+        routerLink="/inventario"
+        class="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+      >
+        Volver al Inventario
+      </button>
+    </div>
+
+    <!-- Resumen -->
+    <div *ngIf="!loading && repuestosStockBajo.length > 0" class="mt-6 bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">📊 Resumen de Reposición</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-red-600">{{ repuestosStockBajo.length }}</div>
+          <div class="text-sm text-gray-600">Repuestos con Stock Bajo</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-green-600">
+            {{ getTotalUnidadesComprar() }}
+          </div>
+          <div class="text-sm text-gray-600">Unidades a Comprar (Sugerido)</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-600">
+            ${{ getInversionEstimada() | number:'1.0-0' }}
+          </div>
+          <div class="text-sm text-gray-600">Inversión Estimada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

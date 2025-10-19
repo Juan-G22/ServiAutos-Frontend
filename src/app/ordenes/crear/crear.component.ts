@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { OrdenesService, Orden } from '../../services/ordenes.service';
 import { ClientesService } from '../../services/clientes.service';
 import { VehiculosService } from '../../services/vehiculos.service';
+import { TechniciansService, Technician } from '../../services/technicians.service';
 
 @Component({
   selector: 'app-crear-orden',
@@ -16,17 +17,16 @@ import { VehiculosService } from '../../services/vehiculos.service';
 })
 export class CrearOrdenComponent implements OnInit {
   orden: Orden = {
-  clientId: '',
-  vehicleId: '',
-  diagnostic: '',
-  assignedTechnician: '',   
-  laborValue: 0,            
-  status: 'Pendiente',
-  dateService: new Date().toISOString()
+    clientId: '',
+    vehicleId: '',
+    diagnostic: '',
+    assignedTechnicianId: '',
+    laborValue: 0
   };
 
   clientes: any[] = [];
   vehiculos: any[] = [];
+  tecnicos: Technician[] = [];
   errorMessage = '';
   successMessage = '';
 
@@ -34,12 +34,14 @@ export class CrearOrdenComponent implements OnInit {
     private ordenesService: OrdenesService,
     private clientesService: ClientesService,
     private vehiculosService: VehiculosService,
+    private techniciansService: TechniciansService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadClientes();
     this.loadVehiculos();
+    this.loadTecnicos();
   }
 
   loadClientes() {
@@ -53,6 +55,13 @@ export class CrearOrdenComponent implements OnInit {
     this.vehiculosService.getVehiculos().subscribe({
       next: (data) => (this.vehiculos = data),
       error: () => (this.errorMessage = 'Error cargando vehículos')
+    });
+  }
+
+  loadTecnicos() {
+    this.techniciansService.listarTecnicosActivos().subscribe({
+      next: (data) => (this.tecnicos = data),
+      error: () => (this.errorMessage = 'Error cargando técnicos')
     });
   }
 

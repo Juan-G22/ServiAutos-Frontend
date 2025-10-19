@@ -39,6 +39,22 @@ export const routes: Routes = [
   { path: 'clientes/crear', component: CrearClienteComponent, canActivate: [authGuard] },
   { path: 'clientes/editar/:id', loadComponent: () => import('./clientes/editar/editar.component').then(m => m.EditarClienteComponent), canActivate: [authGuard] },
 
+  // Inventario
+  { path: 'inventario', loadComponent: () => import('./inventario/listar/listar.component').then(m => m.ListarInventarioComponent), canActivate: [authGuard] },
+  { path: 'inventario/crear', loadComponent: () => import('./inventario/crear/crear.component').then(m => m.CrearInventarioComponent), canActivate: [authGuard] },
+  { path: 'inventario/editar/:id', loadComponent: () => import('./inventario/editar/editar.component').then(m => m.EditarInventarioComponent), canActivate: [authGuard] },
+  { path: 'inventario/low-stock', loadComponent: () => import('./inventario/low-stock/low-stock.component').then(m => m.LowStockComponent), canActivate: [authGuard] },
+  { path: 'inventario/stock', loadComponent: () => import('./inventario/stock/stock.component').then(m => m.StockComponent), canActivate: [authGuard] },
+  { path: 'inventario/movimientos', loadComponent: () => import('./inventario/movimientos/movimientos.component').then(m => m.MovimientosComponent), canActivate: [authGuard] },
+
+  // Técnicos
+  { path: 'technicians', loadComponent: () => import('./technicians/listar/listar.component').then(m => m.ListarTechniciansComponent), canActivate: [authGuard] },
+  { path: 'technicians/crear', loadComponent: () => import('./technicians/crear/crear.component').then(m => m.CrearTechnicianComponent), canActivate: [authGuard] },
+  { path: 'technicians/editar/:id', loadComponent: () => import('./technicians/editar/editar.component').then(m => m.EditarTechnicianComponent), canActivate: [authGuard] },
+
+  // Órdenes - rutas adicionales
+  { path: 'ordenes/detalle/:id', loadComponent: () => import('./ordenes/detalle/detalle.component').then(m => m.DetalleOrdenComponent), canActivate: [authGuard] },
+  { path: 'ordenes/editar/:id', loadComponent: () => import('./ordenes/editar/editar.component').then(m => m.EditarOrdenComponent), canActivate: [authGuard] },
 
   // fallback
   { path: '**', redirectTo: 'login' }

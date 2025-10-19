@@ -46,7 +46,7 @@ export class EditarOrdenComponent implements OnInit {
           clientId: o.clientId,
           vehicleId: o.vehicleId,
           diagnostic: o.diagnostic,
-          assignedTechnician: o.assignedTechnician,
+          assignedTechnicianId: o.assignedTechnicianId,
           laborValue: o.laborValue,
           dateService: o.dateService,
           status: o.status,
@@ -71,7 +71,7 @@ export class EditarOrdenComponent implements OnInit {
       clientId: this.form.clientId || '',
       vehicleId: this.form.vehicleId || '',
       diagnostic: this.form.diagnostic || '',
-      assignedTechnician: this.form.assignedTechnician || '',
+      assignedTechnicianId: this.form.assignedTechnicianId || '',
       laborValue: this.form.laborValue ?? 0,
       dateService: this.form.dateService || new Date().toISOString(),
       status: this.mode === 'attend' ? 'FINALIZED' : (this.form.status || 'PENDING'),
@@ -82,7 +82,7 @@ export class EditarOrdenComponent implements OnInit {
 
     // Validaciones mínimas sólo cuando atendemos
     if (this.mode === 'attend') {
-      if (!payload.assignedTechnician || payload.assignedTechnician.trim().length === 0) {
+      if (!payload.assignedTechnicianId || payload.assignedTechnicianId.trim().length === 0) {
         this.errorMessage = 'Completa el técnico asignado para atender la orden.';
         return;
       }

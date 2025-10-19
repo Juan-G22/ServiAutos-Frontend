@@ -1,0 +1,1139 @@
+{
+	"info": {
+		"_postman_id": "serviautos-backend-collection",
+		"name": "ServiAutos Backend API",
+		"description": "Colección completa de APIs para el sistema ServiAutos Backend - Gestión de talleres automotrices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Autenticación",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@serviautos.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Solicitar Registro",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Juan Pérez\",\n    \"email\": \"juan@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup/request",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "signup", "request"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar Registro",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup/verify?email=juan@example.com&code=123456",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "signup", "verify"],
+							"query": [
+								{
+									"key": "email",
+									"value": "juan@example.com"
+								},
+								{
+									"key": "code",
+									"value": "123456"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Recuperar Contraseña",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/forgot-password?email=admin@serviautos.com",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "forgot-password"],
+							"query": [
+								{
+									"key": "email",
+									"value": "admin@serviautos.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Restablecer Contraseña",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@serviautos.com\",\n    \"code\": \"123456\",\n    \"newPassword\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/reset-password",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "reset-password"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👥 Clientes",
+			"item": [
+				{
+					"name": "Crear Cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Carlos Mendoza\",\n    \"email\": \"carlos@example.com\",\n    \"phone\": \"+57 300 123 4567\",\n    \"address\": \"Calle 123 #45-67, Bogotá\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clients",
+							"host": ["{{base_url}}"],
+							"path": ["api", "clients"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Cliente por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/clients/{{client_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "clients", "{{client_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos los Clientes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/clients",
+							"host": ["{{base_url}}"],
+							"path": ["api", "clients"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Carlos Mendoza Actualizado\",\n    \"email\": \"carlos.actualizado@example.com\",\n    \"phone\": \"+57 300 987 6543\",\n    \"address\": \"Calle 456 #78-90, Medellín\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/clients/{{client_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "clients", "{{client_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Cliente",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/clients/{{client_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "clients", "{{client_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🚗 Vehículos",
+			"item": [
+				{
+					"name": "Crear Vehículo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": \"{{client_id}}\",\n    \"brand\": \"Toyota\",\n    \"model\": \"Corolla\",\n    \"year\": 2020,\n    \"licensePlate\": \"ABC-123\",\n    \"color\": \"Blanco\",\n    \"engineType\": \"Gasolina\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/vehicles",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Vehículo por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/vehicles/{{vehicle_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles", "{{vehicle_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos los Vehículos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/vehicles",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Vehículo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": \"{{client_id}}\",\n    \"brand\": \"Toyota\",\n    \"model\": \"Corolla Cross\",\n    \"year\": 2021,\n    \"licensePlate\": \"ABC-123\",\n    \"color\": \"Gris\",\n    \"engineType\": \"Híbrido\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/vehicles/{{vehicle_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles", "{{vehicle_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Vehículo",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/vehicles/{{vehicle_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles", "{{vehicle_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔧 Técnicos",
+			"item": [
+				{
+					"name": "Crear Técnico",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Miguel Rodríguez\",\n    \"email\": \"miguel@serviautos.com\",\n    \"phone\": \"+57 300 555 1234\",\n    \"specialization\": \"Motor y Transmisión\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/technicians",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Técnico por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/technicians/{{technician_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians", "{{technician_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos los Técnicos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/technicians",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Técnicos Activos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/technicians/active",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians", "active"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Técnicos por Especialización",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/technicians/specialization/Motor y Transmisión",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians", "specialization", "Motor y Transmisión"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Técnico",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Miguel Rodríguez Actualizado\",\n    \"email\": \"miguel.actualizado@serviautos.com\",\n    \"phone\": \"+57 300 555 9876\",\n    \"specialization\": \"Sistema Eléctrico y Electrónico\",\n    \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/technicians/{{technician_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians", "{{technician_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activar Técnico",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/technicians/{{technician_id}}/activate",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians", "{{technician_id}}", "activate"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Desactivar Técnico",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/technicians/{{technician_id}}/deactivate",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians", "{{technician_id}}", "deactivate"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Técnico",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/technicians/{{technician_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "technicians", "{{technician_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📦 Inventario",
+			"item": [
+				{
+					"name": "Crear Repuesto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Filtro de Aceite\",\n    \"detail\": \"Filtro de aceite para motor 1.6L\",\n    \"category\": \"Filtros\",\n    \"brand\": \"Mann-Filter\",\n    \"partNumber\": \"W712/75\",\n    \"unitValue\": 45000.0,\n    \"availableStock\": 25,\n    \"minimumStock\": 5,\n    \"location\": \"Estante A-1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Repuesto por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/{{spare_part_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "{{spare_part_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos los Repuestos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Repuestos por Categoría",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/category/Filtros",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "category", "Filtros"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Repuestos por Marca",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/brand/Mann-Filter",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "brand", "Mann-Filter"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Repuestos con Stock Bajo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/low-stock",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "low-stock"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Repuestos por Nombre",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/search?name=filtro",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "search"],
+							"query": [
+								{
+									"key": "name",
+									"value": "filtro"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Repuesto",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Filtro de Aceite Premium\",\n    \"detail\": \"Filtro de aceite premium para motor 1.6L\",\n    \"category\": \"Filtros\",\n    \"brand\": \"Mann-Filter\",\n    \"partNumber\": \"W712/75\",\n    \"unitValue\": 50000.0,\n    \"availableStock\": 30,\n    \"minimumStock\": 8,\n    \"location\": \"Estante A-2\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/{{spare_part_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "{{spare_part_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar Stock",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/{{spare_part_id}}/add-stock?quantity=10&reason=Compra de inventario&userId={{user_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "{{spare_part_id}}", "add-stock"],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "10"
+								},
+								{
+									"key": "reason",
+									"value": "Compra de inventario"
+								},
+								{
+									"key": "userId",
+									"value": "{{user_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Stock",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/{{spare_part_id}}/remove-stock?quantity=5&reason=Uso en orden de servicio&userId={{user_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "{{spare_part_id}}", "remove-stock"],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "5"
+								},
+								{
+									"key": "reason",
+									"value": "Uso en orden de servicio"
+								},
+								{
+									"key": "userId",
+									"value": "{{user_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajustar Stock",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/{{spare_part_id}}/adjust-stock?newQuantity=20&reason=Inventario físico&userId={{user_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "{{spare_part_id}}", "adjust-stock"],
+							"query": [
+								{
+									"key": "newQuantity",
+									"value": "20"
+								},
+								{
+									"key": "reason",
+									"value": "Inventario físico"
+								},
+								{
+									"key": "userId",
+									"value": "{{user_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Historial de Movimientos de Repuesto",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/{{spare_part_id}}/movements",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "{{spare_part_id}}", "movements"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Historial de Todos los Movimientos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/movements",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "movements"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Repuesto",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/inventory/spare-parts/{{spare_part_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "inventory", "spare-parts", "{{spare_part_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔧 Órdenes de Servicio",
+			"item": [
+				{
+					"name": "Crear Orden de Servicio",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": \"{{client_id}}\",\n    \"vehicleId\": \"{{vehicle_id}}\",\n    \"diagnostic\": \"Revisión general del vehículo\",\n    \"assignedTechnicianId\": \"{{technician_id}}\",\n    \"laborValue\": 150000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Orden por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders", "{{order_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todas las Órdenes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Orden",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientId\": \"{{client_id}}\",\n    \"vehicleId\": \"{{vehicle_id}}\",\n    \"diagnostic\": \"Cambio de aceite y filtros\",\n    \"assignedTechnicianId\": \"{{technician_id}}\",\n    \"laborValue\": 200000.0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders", "{{order_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Asignar Técnico a Orden",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}/attend?technicianId={{technician_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders", "{{order_id}}", "attend"],
+							"query": [
+								{
+									"key": "technicianId",
+									"value": "{{technician_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar Repuesto a Orden",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sparePartId\": \"{{spare_part_id}}\",\n    \"quantity\": 2\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}/spare-parts",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders", "{{order_id}}", "spare-parts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Repuesto de Orden",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}/spare-parts/{{spare_part_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders", "{{order_id}}", "spare-parts", "{{spare_part_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finalizar Orden",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}/finalize",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders", "{{order_id}}", "finalize"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Orden",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/orders/{{order_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "orders", "{{order_id}}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📧 Email",
+			"item": [
+				{
+					"name": "Enviar Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"to\": \"cliente@example.com\",\n    \"subject\": \"Orden de Servicio Completada\",\n    \"body\": \"Su vehículo ha sido reparado exitosamente. Puede recogerlo en nuestras instalaciones.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/email/send",
+							"host": ["{{base_url}}"],
+							"path": ["api", "email", "send"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "client_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "vehicle_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "technician_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "spare_part_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "order_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,160 @@
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100 p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">📊 Historial de Movimientos</h1>
+      <p class="text-gray-600">Registro completo de todas las operaciones de stock</p>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Filtros y Acciones -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Repuesto</label>
+          <select
+            [(ngModel)]="repuestoFiltro"
+            (ngModelChange)="aplicarFiltros()"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">Todos</option>
+            <option *ngFor="let repuesto of repuestos" [value]="repuesto.id">
+              {{ repuesto.name }} ({{ repuesto.partNumber }})
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Movimiento</label>
+          <select
+            [(ngModel)]="tipoFiltro"
+            (ngModelChange)="aplicarFiltros()"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">Todos</option>
+            <option value="ADD">➕ Agregar</option>
+            <option value="REMOVE">➖ Remover</option>
+            <option value="ADJUST">🔧 Ajustar</option>
+          </select>
+        </div>
+        <div class="flex items-end">
+          <button
+            (click)="limpiarFiltros()"
+            class="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
+          >
+            Limpiar Filtros
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <button
+          routerLink="/inventario"
+          class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+        >
+          ← Volver al Inventario
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      <p class="mt-4 text-gray-600">Cargando movimientos...</p>
+    </div>
+
+    <!-- Lista de Movimientos -->
+    <div *ngIf="!loading && movimientosFiltrados.length > 0" class="space-y-4">
+      <div
+        *ngFor="let mov of movimientosFiltrados"
+        class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition"
+      >
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          
+          <!-- Tipo y Fecha -->
+          <div class="flex items-start gap-3">
+            <span class="text-3xl">{{ getTipoIcon(mov.movementType) }}</span>
+            <div>
+              <span [ngClass]="getTipoClass(mov.movementType)" class="px-3 py-1 rounded-full text-sm font-semibold">
+                {{ getTipoNombre(mov.movementType) }}
+              </span>
+              <p class="text-sm text-gray-500 mt-2">{{ formatDate(mov.movementDate) }}</p>
+            </div>
+          </div>
+
+          <!-- Información del Repuesto -->
+          <div>
+            <p class="text-sm text-gray-600">Repuesto</p>
+            <p class="font-semibold text-gray-800">{{ mov.sparePartName || 'N/A' }}</p>
+            <p class="text-xs text-gray-500 mt-1">ID: {{ mov.sparePartId }}</p>
+          </div>
+
+          <!-- Cantidades -->
+          <div>
+            <p class="text-sm text-gray-600">Movimiento de Stock</p>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-xl font-bold text-gray-700">{{ mov.previousStock }}</span>
+              <span class="text-gray-400">→</span>
+              <span class="text-xl font-bold text-blue-600">{{ mov.newStock }}</span>
+            </div>
+            <p class="text-sm mt-1">
+              <span [ngClass]="mov.movementType === 'ADD' ? 'text-green-600' : mov.movementType === 'REMOVE' ? 'text-red-600' : 'text-blue-600'" class="font-semibold">
+                {{ mov.movementType === 'ADD' ? '+' : mov.movementType === 'REMOVE' ? '-' : '±' }}{{ abs(mov.quantity) }} unidades
+              </span>
+            </p>
+          </div>
+
+          <!-- Razón y Usuario -->
+          <div>
+            <p class="text-sm text-gray-600">Razón</p>
+            <p class="text-gray-800">{{ mov.reason }}</p>
+            <p class="text-sm text-gray-500 mt-2">
+              <span class="font-semibold">Usuario:</span> {{ mov.userName || mov.userId }}
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Sin resultados -->
+    <div *ngIf="!loading && movimientosFiltrados.length === 0" class="bg-white rounded-lg shadow-lg p-12 text-center">
+      <div class="text-6xl mb-4">📭</div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">No hay movimientos</h2>
+      <p class="text-gray-600">No se encontraron movimientos de stock con los filtros seleccionados</p>
+    </div>
+
+    <!-- Resumen -->
+    <div *ngIf="!loading && movimientosFiltrados.length > 0" class="mt-6 bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">📈 Resumen de Movimientos</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-purple-600">{{ movimientosFiltrados.length }}</div>
+          <div class="text-sm text-gray-600">Total Movimientos</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-green-600">
+            {{ getMovimientosAdd() }}
+          </div>
+          <div class="text-sm text-gray-600">Agregados</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-red-600">
+            {{ getMovimientosRemove() }}
+          </div>
+          <div class="text-sm text-gray-600">Removidos</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-blue-600">
+            {{ getMovimientosAdjust() }}
+          </div>
+          <div class="text-sm text-gray-600">Ajustes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

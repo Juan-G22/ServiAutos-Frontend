@@ -1,37 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { Orden, OrdenesService } from '../../services/ordenes.service';
+import { TechniciansService, Technician } from '../../services/technicians.service';
+import { ClientesService } from '../../services/clientes.service';
+import { VehiculosService } from '../../services/vehiculos.service';
 
 @Component({
   selector: 'app-editar-orden',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './editar.component.html'
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './editar.component.html',
+  styleUrls: ['./editar.component.scss']
 })
 export class EditarOrdenComponent implements OnInit {
 
-  id!: string;                                // id de la orden (obligatorio)
-  mode: 'edit' | 'attend' = 'edit';           // modo de pantalla
-  loading = true;                             // para tu *ngIf="loading"
-  errorMessage = '';                          // para mostrar errores
+  id!: string;
+  loading = true;
+  errorMessage = '';
+  successMessage = '';
 
-  // Usamos Partial para el formulario, y al guardar construimos un Orden completo
   form: Partial<Orden> = {};
+  
+  // Listas para selects
+  tecnicos: Technician[] = [];
+  clientes: any[] = [];
+  vehiculos: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private ordenes: OrdenesService
+    private ordenes: OrdenesService,
+    private techniciansService: TechniciansService,
+    private clientesService: ClientesService,
+    private vehiculosService: VehiculosService
   ) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') ?? '';
-
-    const qMode = (this.route.snapshot.queryParamMap.get('mode') ?? '').toLowerCase();
-    if (qMode === 'attend') this.mode = 'attend';
 
     if (!this.id) {
       this.errorMessage = 'ID de la orden no válido.';
@@ -39,9 +47,13 @@ export class EditarOrdenComponent implements OnInit {
       return;
     }
 
+    this.cargarDatos();
+  }
+
+  cargarDatos(): void {
+    // Cargar la orden
     this.ordenes.getById(this.id).subscribe({
       next: (o) => {
-        // Prellenar formulario
         this.form = {
           clientId: o.clientId,
           vehicleId: o.vehicleId,
@@ -60,48 +72,84 @@ export class EditarOrdenComponent implements OnInit {
         this.loading = false;
       }
     });
+
+    // Cargar técnicos activos
+    this.techniciansService.listarTecnicosActivos().subscribe({
+      next: (data) => {
+        this.tecnicos = data;
+      },
+      error: () => console.error('Error cargando técnicos')
+    });
+
+    // Cargar clientes
+    this.clientesService.getClients().subscribe({
+      next: (data) => {
+        this.clientes = data;
+      },
+      error: () => console.error('Error cargando clientes')
+    });
+
+    // Cargar vehículos
+    this.vehiculosService.getVehiculos().subscribe({
+      next: (data) => {
+        this.vehiculos = data;
+      },
+      error: () => console.error('Error cargando vehículos')
+    });
   }
 
   guardar(): void {
     if (!this.id) return;
 
-    // Construimos un Orden COMPLETO (evita el error de Partial<Orden> en el build)
+    if (!this.validarFormulario()) {
+      return;
+    }
+
     const payload: Orden = {
       id: this.id,
       clientId: this.form.clientId || '',
       vehicleId: this.form.vehicleId || '',
       diagnostic: this.form.diagnostic || '',
-      assignedTechnicianId: this.form.assignedTechnicianId || '',
-      laborValue: this.form.laborValue ?? 0,
-      dateService: this.form.dateService || new Date().toISOString(),
-      status: this.mode === 'attend' ? 'FINALIZED' : (this.form.status || 'PENDING'),
-      // opcionales
-      clientName: this.form.clientName,
-      vehiclePlate: this.form.vehiclePlate
+      assignedTechnicianId: this.form.assignedTechnicianId,
+      laborValue: this.form.laborValue ?? 0
     };
 
-    // Validaciones mínimas sólo cuando atendemos
-    if (this.mode === 'attend') {
-      if (!payload.assignedTechnicianId || payload.assignedTechnicianId.trim().length === 0) {
-        this.errorMessage = 'Completa el técnico asignado para atender la orden.';
-        return;
-      }
-      if (payload.laborValue == null || Number(payload.laborValue) <= 0) {
-        this.errorMessage = 'Ingresa un valor de mano de obra válido.';
-        return;
-      }
-      if (!payload.dateService) {
-        payload.dateService = new Date().toISOString();
-      }
-    }
-
+    this.loading = true;
     this.ordenes.updateOrden(this.id, payload).subscribe({
-      next: () => this.router.navigate(['/ordenes/listar']),
-      error: () => (this.errorMessage = 'Error guardando cambios')
+      next: () => {
+        this.successMessage = 'Orden actualizada con éxito ✅';
+        setTimeout(() => {
+          this.router.navigate(['/ordenes']);
+        }, 1500);
+      },
+      error: () => {
+        this.errorMessage = 'Error al actualizar la orden ❌';
+        this.loading = false;
+      }
     });
   }
 
+  validarFormulario(): boolean {
+    if (!this.form.clientId) {
+      this.errorMessage = 'Debe seleccionar un cliente';
+      return false;
+    }
+    if (!this.form.vehicleId) {
+      this.errorMessage = 'Debe seleccionar un vehículo';
+      return false;
+    }
+    if (!this.form.diagnostic?.trim()) {
+      this.errorMessage = 'El diagnóstico es requerido';
+      return false;
+    }
+    if (!this.form.laborValue || this.form.laborValue <= 0) {
+      this.errorMessage = 'El valor de mano de obra debe ser mayor a 0';
+      return false;
+    }
+    return true;
+  }
+
   cancelar(): void {
-    this.router.navigate(['/ordenes/listar']);
+    this.router.navigate(['/ordenes']);
   }
 }

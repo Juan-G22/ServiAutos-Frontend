@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { OrdenesService, Orden, AddSparePartRequest } from '../../services/ordenes.service';
 import { TechniciansService, Technician } from '../../services/technicians.service';
 import { InventarioService, SparePart } from '../../services/inventario.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-detalle-orden',
@@ -42,27 +43,80 @@ export class DetalleOrdenComponent implements OnInit {
   ngOnInit(): void {
     this.ordenId = this.route.snapshot.paramMap.get('id') || '';
     if (this.ordenId) {
-      this.cargarOrden();
-      this.cargarTecnicos();
-      this.cargarRepuestos();
+      this.cargarDatosCompletos();
     } else {
       this.errorMessage = 'ID de orden no válido';
     }
   }
 
-  cargarOrden(): void {
+  cargarDatosCompletos(): void {
     this.loading = true;
-    this.ordenesService.getById(this.ordenId).subscribe({
-      next: (data) => {
-        this.orden = data;
+    
+    // Cargar orden, técnicos y repuestos en paralelo
+    forkJoin({
+      orden: this.ordenesService.getById(this.ordenId),
+      tecnicos: this.techniciansService.listarTecnicosActivos(),
+      repuestos: this.inventarioService.listarTodosRepuestos()
+    }).subscribe({
+      next: (resultado) => {
+        this.orden = resultado.orden;
+        this.tecnicos = resultado.tecnicos;
+        this.repuestos = resultado.repuestos.filter(r => r.availableStock > 0);
+
+        console.log('✅ Orden cargada:', this.orden);
+        console.log('📦 Repuestos en la orden:', this.orden.spareParts);
+        console.log('📋 Repuestos disponibles:', this.repuestos.length);
+
+        // Enriquecer los repuestos de la orden con los nombres
+        if (this.orden.spareParts && this.orden.spareParts.length > 0) {
+          this.enriquecerRepuestos();
+          console.log('✨ Repuestos enriquecidos:', this.orden.spareParts);
+        }
+
         this.loading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error al cargar la orden';
-        console.error('Error:', error);
+        this.errorMessage = 'Error al cargar los datos de la orden';
+        console.error('❌ Error:', error);
         this.loading = false;
       }
     });
+  }
+
+  enriquecerRepuestos(): void {
+    if (!this.orden || !this.orden.spareParts) return;
+
+    // Buscar los nombres de los repuestos que no los tengan
+    this.orden.spareParts = this.orden.spareParts.map((sp) => {
+      // Si ya tiene el nombre, devolverlo tal cual
+      if (sp.sparePartName) {
+        return sp;
+      }
+
+      // Si no tiene nombre, buscarlo en el inventario
+      const repuesto = this.repuestos.find(r => r.id === sp.sparePartId);
+      if (repuesto) {
+        return {
+          ...sp,
+          sparePartName: repuesto.name,
+          unitValue: sp.unitValue || repuesto.unitValue,
+          totalValue: sp.totalValue || (sp.quantity * repuesto.unitValue)
+        };
+      }
+
+      // Si no se encuentra, devolver con nombre por defecto
+      return {
+        ...sp,
+        sparePartName: `Repuesto ${sp.sparePartId}`,
+        unitValue: sp.unitValue || 0,
+        totalValue: sp.totalValue || 0
+      };
+    });
+  }
+
+  cargarOrden(): void {
+    // Este método ahora solo se usa después de agregar/remover repuestos
+    this.cargarDatosCompletos();
   }
 
   cargarTecnicos(): void {
@@ -142,6 +196,12 @@ export class DetalleOrdenComponent implements OnInit {
       return;
     }
 
+    const repuesto = this.repuestos.find(r => r.id === this.repuestoSeleccionado);
+    if (repuesto && this.cantidadRepuesto > repuesto.availableStock) {
+      this.errorMessage = `Stock insuficiente. Disponible: ${repuesto.availableStock}`;
+      return;
+    }
+
     const request: AddSparePartRequest = {
       sparePartId: this.repuestoSeleccionado,
       quantity: this.cantidadRepuesto
@@ -157,7 +217,7 @@ export class DetalleOrdenComponent implements OnInit {
         setTimeout(() => this.successMessage = '', 3000);
       },
       error: (error) => {
-        this.errorMessage = 'Error al agregar repuesto ❌';
+        this.errorMessage = error?.error?.message || 'Error al agregar repuesto ❌';
         console.error('Error:', error);
         this.loading = false;
       }

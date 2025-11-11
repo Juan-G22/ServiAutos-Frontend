@@ -9,6 +9,11 @@ import { ListarVehiculosComponent as ListarVehiculosComponent } from './vehiculo
 import { CrearVehiculoComponent as CrearVehiculoComponent } from './vehiculos/crear/crear.component';
 import { EditarVehiculoComponent } from './vehiculos/editar/editar.component';
 
+// Garantías
+import { ListarGarantiasComponent } from './garantias/listar/listar.component';
+import { DetalleGarantiaComponent } from './garantias/detalle/detalle.component';
+import { EditarGarantiaComponent } from './garantias/editar/editar.component';
+
 // Órdenes
 import { ListarOrdenesComponent } from './ordenes/listar/listar.component';
 import { CrearOrdenComponent } from './ordenes/crear/crear.component';
@@ -32,9 +37,16 @@ export const routes: Routes = [
   { path: 'vehiculos/crear', component: CrearVehiculoComponent, canActivate: [authGuard] },
   { path: 'vehiculos/editar/:id', component: EditarVehiculoComponent, canActivate: [authGuard] },
 
+  // Garantías
+  { path: 'garantias', component: ListarGarantiasComponent, canActivate: [authGuard] },
+  { path: 'garantias/detalle/:id', component: DetalleGarantiaComponent, canActivate: [authGuard] },
+  { path: 'garantias/editar/:id', component: EditarGarantiaComponent, canActivate: [authGuard] },
+
   // Órdenes
   { path: 'ordenes', component: ListarOrdenesComponent, canActivate: [authGuard] },
   { path: 'ordenes/crear', component: CrearOrdenComponent, canActivate: [authGuard] },
+  { path: 'ordenes/detalle/:id', loadComponent: () => import('./ordenes/detalle/detalle.component').then(m => m.DetalleOrdenComponent), canActivate: [authGuard] },
+  { path: 'ordenes/editar/:id', loadComponent: () => import('./ordenes/editar/editar.component').then(m => m.EditarOrdenComponent), canActivate: [authGuard] },
 
   // Clientes
   { path: 'clientes', component: ListarClientesComponent, canActivate: [authGuard] },
@@ -53,10 +65,6 @@ export const routes: Routes = [
   { path: 'technicians', loadComponent: () => import('./technicians/listar/listar.component').then(m => m.ListarTechniciansComponent), canActivate: [authGuard] },
   { path: 'technicians/crear', loadComponent: () => import('./technicians/crear/crear.component').then(m => m.CrearTechnicianComponent), canActivate: [authGuard] },
   { path: 'technicians/editar/:id', loadComponent: () => import('./technicians/editar/editar.component').then(m => m.EditarTechnicianComponent), canActivate: [authGuard] },
-
-  // Órdenes - rutas adicionales
-  { path: 'ordenes/detalle/:id', loadComponent: () => import('./ordenes/detalle/detalle.component').then(m => m.DetalleOrdenComponent), canActivate: [authGuard] },
-  { path: 'ordenes/editar/:id', loadComponent: () => import('./ordenes/editar/editar.component').then(m => m.EditarOrdenComponent), canActivate: [authGuard] },
 
   // fallback
   { path: '**', redirectTo: 'login' }

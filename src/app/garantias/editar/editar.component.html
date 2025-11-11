@@ -1,0 +1,116 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 p-8">
+  <div class="max-w-3xl mx-auto">
+    <div class="mb-8">
+      <button
+        (click)="cancelar()"
+        class="mb-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-semibold"
+      >
+        ← Volver a Garantías
+      </button>
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">✏️ Editar Garantía</h1>
+      <p class="text-gray-600">Actualiza la información y el estado de la garantía seleccionada</p>
+    </div>
+
+    <div *ngIf="loading" class="bg-white rounded-lg shadow-lg p-12 text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <p class="mt-4 text-gray-600">Cargando datos de la garantía...</p>
+    </div>
+
+    <div *ngIf="!loading" class="bg-white rounded-lg shadow-lg p-8">
+      <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+        {{ successMessage }}
+      </div>
+      <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+        {{ errorMessage }}
+      </div>
+
+      <form (ngSubmit)="actualizarGarantia()" *ngIf="garantiaOriginal">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">ID Garantía</label>
+            <div class="px-4 py-3 bg-indigo-50 rounded-lg text-gray-800 font-semibold">
+              {{ garantiaOriginal.id }}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Orden Asociada</label>
+            <div class="px-4 py-3 bg-indigo-50 rounded-lg text-gray-800 font-semibold">
+              {{ garantiaOriginal.orderId }}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Cliente</label>
+            <div class="px-4 py-3 bg-indigo-50 rounded-lg text-gray-800">
+              {{ obtenerNombreCliente(garantiaOriginal.clientId) }}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Estado *</label>
+            <select
+              [(ngModel)]="payload.status"
+              name="status"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            >
+              <option value="" disabled>Selecciona un estado...</option>
+              <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Descripción</label>
+            <textarea
+              [(ngModel)]="payload.description"
+              name="description"
+              rows="4"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Descripción detallada de la garantía"
+            ></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700 mb-2">Observaciones</label>
+            <textarea
+              [(ngModel)]="payload.observations"
+              name="observations"
+              rows="4"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Observaciones adicionales"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <label class="block text-sm font-bold text-gray-700 mb-2">Técnico Responsable</label>
+          <select
+            [(ngModel)]="payload.technicianId"
+            name="technicianId"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">Sin técnico asignado</option>
+            <option *ngFor="let tecnico of tecnicos" [value]="tecnico.id">
+              {{ tecnico.name }} - {{ tecnico.specialization }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mt-8 flex gap-4">
+          <button
+            type="submit"
+            class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg shadow hover:from-blue-700 hover:to-indigo-700 transition font-semibold"
+          >
+            💾 Guardar cambios
+          </button>
+          <button
+            type="button"
+            (click)="cancelar()"
+            class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition font-semibold"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

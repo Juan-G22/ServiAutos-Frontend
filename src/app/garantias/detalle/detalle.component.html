@@ -1,0 +1,180 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 p-8">
+  <div class="max-w-5xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <button
+          (click)="volver()"
+          class="mb-4 md:mb-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-semibold"
+        >
+          ← Volver a Garantías
+        </button>
+        <h1 class="text-4xl font-bold text-gray-800">Detalle de Garantía</h1>
+        <p class="text-gray-600">
+          Información detallada de la garantía y acciones disponibles
+        </p>
+      </div>
+      <span [ngClass]="getStatusBadge(garantia?.status)" class="px-4 py-2 rounded-full text-sm font-semibold h-fit">
+        {{ garantia?.status || 'SIN ESTADO' }}
+      </span>
+    </div>
+
+    <!-- Mensajes -->
+    <div *ngIf="successMessage" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="bg-white rounded-lg shadow-lg p-12 text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <p class="mt-4 text-gray-600">Cargando información de la garantía...</p>
+    </div>
+
+    <ng-container *ngIf="!loading && garantia">
+      <!-- Información principal -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm text-gray-500">ID Garantía</p>
+            <p class="text-lg font-semibold text-gray-900">{{ garantia.id }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Orden Asociada</p>
+            <p class="text-lg font-semibold text-gray-900">{{ obtenerOrdenAsociada() }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Cliente</p>
+            <p class="text-lg font-semibold text-gray-900">{{ obtenerNombreCliente(garantia.clientId) }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Técnico Responsable</p>
+            <p class="text-lg font-semibold text-gray-900">
+              {{ garantia.technicianName || garantia.technicianId || 'Sin asignar' }}
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Fecha de inicio</p>
+            <p class="text-lg font-semibold text-gray-900">{{ garantia.startDate | date:'medium' }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Fecha de expiración</p>
+            <p class="text-lg font-semibold text-gray-900">
+              {{ obtenerFechaExpiracion() }}
+            </p>
+          </div>
+        </div>
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Descripción</p>
+            <div class="p-4 bg-indigo-50 rounded-lg text-gray-700 min-h-[80px]">
+              {{ garantia.description || 'Sin descripción registrada' }}
+            </div>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Observaciones</p>
+            <div class="p-4 bg-indigo-50 rounded-lg text-gray-700 min-h-[80px]">
+              {{ garantia.observations || 'Sin observaciones registradas' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Acciones rápidas</h2>
+        <div class="flex flex-wrap gap-3">
+          <button
+            (click)="cambiarModo('attend')"
+            class="px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg shadow hover:from-amber-600 hover:to-amber-700 transition font-semibold"
+          >
+            🧰 Registrar Atención
+          </button>
+          <button
+            (click)="cambiarModo('close')"
+            class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow hover:from-green-600 hover:to-emerald-700 transition font-semibold"
+          >
+            ✅ Cerrar Garantía
+          </button>
+          <button
+            (click)="cambiarModo('view')"
+            class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition font-semibold"
+          >
+            👁️ Solo visualizar
+          </button>
+        </div>
+      </div>
+
+      <!-- Formularios -->
+      <div *ngIf="modo === 'attend'" class="bg-white rounded-lg shadow-lg p-6 mb-6 border-l-4 border-amber-500">
+        <h3 class="text-xl font-bold text-amber-700 mb-4">Registrar atención de garantía</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Selecciona un técnico</label>
+            <select
+              [(ngModel)]="tecnicoSeleccionado"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+            >
+              <option value="">Selecciona un técnico...</option>
+              <option *ngFor="let tecnico of tecnicos" [value]="tecnico.id">
+                {{ tecnico.name }} - {{ tecnico.specialization }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Observaciones</label>
+            <textarea
+              [(ngModel)]="observacionesAtencion"
+              rows="3"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+              placeholder="Describe las acciones realizadas con la garantía"
+            ></textarea>
+          </div>
+        </div>
+        <div class="mt-6 flex gap-4">
+          <button
+            (click)="atenderGarantia()"
+            class="flex-1 px-6 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg shadow hover:from-amber-600 hover:to-amber-700 transition font-semibold"
+          >
+            Guardar atención
+          </button>
+          <button
+            (click)="cambiarModo('view')"
+            class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition font-semibold"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="modo === 'close'" class="bg-white rounded-lg shadow-lg p-6 mb-6 border-l-4 border-green-500">
+        <h3 class="text-xl font-bold text-green-700 mb-4">Cerrar garantía</h3>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Observaciones de cierre *</label>
+          <textarea
+            [(ngModel)]="observacionesCierre"
+            rows="4"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            placeholder="Describe el resultado final y la conformidad del cliente"
+          ></textarea>
+        </div>
+        <div class="mt-6 flex gap-4">
+          <button
+            (click)="cerrarGarantia()"
+            class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow hover:from-green-600 hover:to-emerald-700 transition font-semibold"
+          >
+            Cerrar garantía
+          </button>
+          <button
+            (click)="cambiarModo('view')"
+            class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg shadow hover:bg-gray-300 transition font-semibold"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

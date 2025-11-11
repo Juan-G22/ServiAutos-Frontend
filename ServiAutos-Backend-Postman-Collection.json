@@ -1043,6 +1043,233 @@
 			]
 		},
 		{
+			"name": "🛡️ Garantías",
+			"item": [
+				{
+					"name": "Obtener Garantía por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/{{warranty_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "{{warranty_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Garantía por Orden de Servicio",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/order/{{order_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "order", "{{order_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todas las Garantías",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Garantías por Cliente",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/client/{{client_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "client", "{{client_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Garantías por Estado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/status/OPEN",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "status", "OPEN"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Garantías Activas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/active",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "active"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Garantías Vencidas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/expired",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "expired"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Garantía",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"ATTENDED\",\n    \"description\": \"Garantía en proceso de atención\",\n    \"observations\": \"Se requiere revisión adicional del vehículo\",\n    \"technicianId\": \"{{technician_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/warranties/{{warranty_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "{{warranty_id}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atender Garantía",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/{{warranty_id}}/attend?technicianId={{technician_id}}&observations=Garantía en proceso de atención",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "{{warranty_id}}", "attend"],
+							"query": [
+								{
+									"key": "technicianId",
+									"value": "{{technician_id}}"
+								},
+								{
+									"key": "observations",
+									"value": "Garantía en proceso de atención"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cerrar Garantía",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/{{warranty_id}}/close?observations=Garantía resuelta exitosamente",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "{{warranty_id}}", "close"],
+							"query": [
+								{
+									"key": "observations",
+									"value": "Garantía resuelta exitosamente"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar y Cerrar Garantías Vencidas",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/warranties/check-expired",
+							"host": ["{{base_url}}"],
+							"path": ["api", "warranties", "check-expired"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "📧 Email",
 			"item": [
 				{
@@ -1132,6 +1359,11 @@
 		},
 		{
 			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "warranty_id",
 			"value": "",
 			"type": "string"
 		}

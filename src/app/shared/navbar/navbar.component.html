@@ -11,20 +11,19 @@
     <a routerLink="/clientes" routerLinkActive="text-blue-400" class="hover:text-blue-400">Clientes</a>
     <a routerLink="/vehiculos" routerLinkActive="text-blue-400" class="hover:text-blue-400">Vehículos</a>
     <a routerLink="/technicians" routerLinkActive="text-blue-400" class="hover:text-blue-400">Técnicos</a>
+    <a routerLink="/garantias" routerLinkActive="text-blue-400" class="hover:text-blue-400">Garantías</a>
     <a routerLink="/ordenes" routerLinkActive="text-blue-400" class="hover:text-blue-400">Órdenes</a>
     <a routerLink="/inventario" routerLinkActive="text-blue-400" class="hover:text-blue-400">Inventario</a>
   </div>
 
   <!-- Usuario -->
   <div class="flex items-center space-x-4">
-    
     <span class="text-sm">Hola, {{ userName || 'Usuario' }}</span>
 
-    <button 
-      (click)="logout()" 
+    <button
+      (click)="logout()"
       class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">
       Cerrar sesión
     </button>
   </div>
 </nav>
-
